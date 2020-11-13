@@ -1,0 +1,15 @@
+Package: ClustersAnalysis
+Title: Analyses and interpretation of clustering
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: The aim of ClustersAnalysis is to help the user to interpret and understand how the clusters are build and what are the main caracteristics of each clusters.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
