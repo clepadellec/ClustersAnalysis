@@ -1,0 +1,855 @@
+---
+title: "Projet_Clustering"
+author: "Clement Le Padellec"
+date: "27 avril 2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
+
+```
+
+```{r echo=FALSE, include=FALSE}
+#Chargement des packages nécessaires
+install.packages(c("FactoMineR", "factoextra", "questionr","xlsx","fpc","corrplot","ExPosition" ),repos = "http://cran.us.r-project.org")
+library("fpc")
+library("FactoMineR")
+library("factoextra")
+library("questionr")
+
+library("corrplot")
+library("ExPosition")
+
+
+```
+
+```{r echo=FALSE, include=FALSE}
+setwd('C:/Users/clementlepadellec/Downloads/')
+data_0=read.csv2("Données-R-1.csv", sep=";", row.names = 1)
+```
+## **Statistiques Descriptives**
+```{r echo=FALSE}
+data.qt = data_0[,1:10]
+
+#aperçu des données
+print(summary(data_0))
+
+#premier regard sur la corrélation
+cor(data.qt)
+plot(data.qt)
+
+#Au premier abord les variables corrélées avec l'index semblent être :
+
+#positivement : esperance, bien être, heureux
+#négativement : ineg_rev
+
+#répartition des données par variables / 1er regard sur certains individus atypiques
+
+#indicateurs
+boxplot(data.qt[,1:8])
+# a part pour la variable empreinte il ne semble pas y avoir d'individu atypique
+#PIB
+boxplot(data.qt[,9])
+#On remarque quue certains individus ont un PIB nettement supérieur à la moyenne
+#Population
+boxplot(data.qt[,10])
+#Sur ce graphique il semble y avoir 2 pays qui ont une populations nettement supérieur aux autres pays
+
+#On sait dorénavant que pour certaines variables, les individus peuvent avoir des valeurs abérrentes, il faudra se méfier à ce que celà n'impacte pas nos analyses
+```
+## **Analyse des correspondances principales**
+
+### *Sélection des variables actives*
+```{r echo=FALSE}
+data.active = data_0[,c('Esperance', 'Bien.Etre', 'Heureux', 'Empreinte','Ineg_rev','Ineg_BE', 'Ineg_esp', 'PIB','Population')]
+head(data.active)
+
+```
+### *Mise en place de l'ACP*
+```{r}
+#mise en place de l'acp avec l'option pour centrer réduire les données
+res.pca <- PCA(data.active, scale.unit = TRUE, ncp = 3, graph = T)
+print(res.pca)
+# graphique écrasé car 2 individus contribuent très fortement à la construction de l'axe 2
+```
+```{r}
+eig.val <- get_eigenvalue(res.pca) 
+eig.val
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50))
+```
+-> On retient les valeurs avec valeurs propres > 1 donc les 2 premières
+-> Les variables bien représentées sont les variables qui ont un cosinus carré élevé, et les variables qui contribuent sont les variables qui ont une contribution élevée
+-> Création d'une variable "var" avec tous les résultats concernants les variables :
+```{r}
+var <- get_pca_var(res.pca)
+var
+
+#-> Graphique du Cos2 des variables sur le 1 premier axe : 
+
+fviz_cos2(res.pca, choice = "var")
+
+var$coord
+var$cos2
+var$contrib
+```
+
+### *Analyse de l'axe 1*
+
+```{r}
+
+coord <- var$coord[,1]
+contrib <- var$contrib[,1]
+cos2 <- var$cos2[,1]
+display <- cbind(coord,contrib,cos2)
+display
+#L'axe 1 met en évidence du coté positif les pays qui sont bien notées en heureux et mal noté en ineg_rev, et du coté négatif, les pays bien notés en Ineg_rev et mal noté en heureux
+```
+
+### *Analyse de l'axe 1*
+
+```{r}
+
+coord <- var$coord[,2]
+contrib <- var$contrib[,2]
+cos2 <- var$cos2[,2]
+display <- cbind(coord,contrib,cos2)
+display
+```
+ 
+L'axe 2 met en évidence  du coté positif les pays qui sont bien notés en population 
+
+
+
+```{r}
+#contribution des individus aux dim 1 et dim 2
+fviz_contrib(res.pca, choice = "ind", axes = 1,top = 10)
+
+
+fviz_contrib(res.pca, choice = "ind", axes = 1:2, top = 10)
+```
+
+```{r}
+fviz_pca_biplot(res.pca, repel = TRUE,
+                
+                col.var = "#2E9FDF", # Couleur des variables
+                addEllipses = TRUE, col.ind = "#696969" # Couleur des individues
+)
+```
+
+### *Passage de population et PIB en illustrative*
+```{r}
+res.pca2 <- PCA(data.active, ind.sup = NULL,
+                quanti.sup = 8:9, graph=TRUE)
+
+eig.val <- get_eigenvalue(res.pca2) 
+eig.val
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50))
+```
+
+```{r}
+fviz_pca_biplot(res.pca2, repel = TRUE,
+                
+                col.var = "#2E9FDF", # Couleur des variables
+                addEllipses = TRUE, col.ind = "#696969" # Couleur des individus
+)
+```
+
+```{r}
+fviz_contrib(res.pca2, choice = "ind", axes = 1:2, top = 10)
+```
+
+```{r}
+fviz_contrib(res.pca2, choice = "ind", axes = 1,top = 10)
+```
+
+
+## **Analyse factorielle des correspondances**
+
+### *Transformation des données*
+```{r echo=FALSE}
+#transformation de la variable quanti "Heureux" en une variable qualitative
+data_0$heureux_quali <- cut(data_0$Heureux, breaks = 4, include.lowest = TRUE, labels = c("heureux.1", "heureux.2", "heureux.3", "heureux.4"))
+
+#affichage des fréquence
+freq(data_0$heureux_quali)
+
+
+#on supprime les variables quantitaives 
+data = data_0[-c(1:11)]
+
+#on s'assure que tout est bien en chaîne de caractère
+str(data)
+names(data) #noms des variables restantes
+data$liberte_internet<- factor(data$liberte_internet, levels = c("F", "PF","NF")) 
+
+```
+
+
+### *Tableau de contingence,test du khi2 et profils lignes/colonnes pour vérifier l'indépendance*
+
+#### Lien entre le fait d'être heureux (heureux_quali) et la Région
+
+
+```{r echo=FALSE}
+
+#quali ordinale avec du quali ordinal
+
+#affichage du tableau
+contingence_h_r = table(data$heureux_quali, data$Region)
+contingence_h_r
+#graphiques
+colors <- c("chartreuse4", "chartreuse1", "orange")
+barplot(contingence_h_r, col=colors, main = "heureux par liberté sur internet", ylab="nombre ")
+mosaicplot(contingence_h_r, col = colors)
+```
+```{r echo=FALSE}
+#réalisation des profils ligne et colonne
+lprop(contingence_h_r, digits=1)#la distribution de la région parmis ceux heureux || 4 profils lignes 
+#ensemble = profil moyen
+cprop(contingence_h_r, digits=2)
+#on s'uppose la dépendance car les profils sont distincts
+
+```
+```{r echo=FALSE}
+# on test l'indépendance
+chisq = chisq.test(contingence_h_r)
+chisq
+#il existe un lien car pvalue < 5% on accepte h0
+
+
+```
+
+#### Lien entre le fait d'être heureux et le régime politique
+
+```{r echo=FALSE}
+
+#création du tableau de contingence
+contingence_h_p = table(data$heureux_quali, data$Regime_poli)
+contingence_h_p
+
+```
+
+```{r echo=FALSE}
+
+#réalisation des profils ligne et colonne
+lprop(contingence_h_p, digits=1)#le Régime politique parmis ceux qui sont hereux || 4 profils lignes 
+cprop(contingence_h_p, digits=2)
+#on suppose la dépendance car les profils sont distincts
+
+```
+```{r echo=FALSE}
+# on test l'indépendance
+chisq = chisq.test(contingence_h_p)
+chisq
+#<5% donc acceptation de h0 donc lien
+```
+
+```{r}
+#lien mais trop de classes, on a donc essayé de réduire en 3 classes :
+contingence_h_p_s = table(data$heureux_quali, data$Régime_simp) #l'exécution marche même si erreur à cause de l'accent
+contingence_h_p_s
+
+# on test l'indépendance
+chisq = chisq.test(contingence_h_p_s)
+chisq
+#il y a bien un lien
+```
+
+
+#### Lien entre le fait d'être heureux et la liberté internet
+
+```{r echo=FALSE}
+
+#quali ordinale avec du quali 
+
+#création du tableau de contingence
+
+contingence_h_i = table(data$heureux_quali, data$liberte_internet)
+contingence_h_i
+
+```
+
+```{r echo=FALSE}
+
+#réalisation des profils ligne et colonne
+lprop(contingence_h_i, digits=1)
+cprop(contingence_h_i, digits=2)
+#on s'uppose la dépendance car les profils sont distincts
+```
+
+```{r echo=FALSE}
+# on test l'indépendance
+chisq = chisq.test(contingence_h_i)
+chisq
+#il y a bien un lien
+
+```
+
+#### Lien entre le fait d'être heureux et le nombre d'années d'études
+
+```{r echo=FALSE}
+#quali ordinale avec du quali 
+
+#création du tableau de contingence
+
+contingence_h_e = table(data$nb_annee_scolaire_moy, data$heureux_quali)
+contingence_h_e
+
+```
+
+```{r echo=FALSE}
+#réalisation des profils ligne et colonne
+lprop(contingence_h_e, digits=1)
+cprop(contingence_h_e, digits=2)
+#on s'uppose la dépendance car les profils sont distincts
+
+```
+
+```{r echo=FALSE}
+# on test l'indépendance
+chisq = chisq.test(contingence_h_e)
+chisq
+#il y a bien un lien
+
+```
+
+### *Réalisation des AFC*
+
+Malgré le fait que toutes les variables soient liées au fait d'être heureux, on ne réalisera que deux AFC qui nous paraissent les plus pertinentes.Il s'agit du lien entre la région et le fait d'être heureux et du lien entre le régime politique et le fait d'être heureux
+
+#### Entre le fait d'être heureux (heureux_quali) et la Région
+
+```{r echo=FALSE}
+#Mise en place de l'AFC
+res.ca <- CA(contingence_h_r, graph = TRUE)
+print(res.ca)
+#visualisation des valeurs propres
+eig.val <- get_eigenvalue(res.ca)
+eig.val
+#3 valeurs propres car min(n-1)(p-1)
+fviz_eig(res.ca, addlabels = TRUE, ylim = c(0,100))#graphique des valeurs propres avec la 
+#Visualisation des profils lignes et colonnes dans un meme graphique
+#on garde que 1 axe, car coude + 73% d'inertie
+
+fviz_ca_biplot (res.ca, repel = TRUE) #argument repel pour eviter le chevauchement
+```
+
+```{r echo=FALSE}
+
+#Resultats pour les profils lignes
+
+row<-get_ca_row(res.ca)
+row
+
+coord <- row$coord[,1]
+contrib <- row$contrib[,1]
+cos2 <- row$cos2[,1]
+display <- cbind(coord,contrib,cos2)
+display
+#DU coté + de l'axe on retrouve le profil des très heureux et heureux contrairement au coté - ou on retrouve le profil des pas heureux
+#la Région pour ceux très heureux n'est pas la même que la distribution de l'age pour les pas heureux
+#ceux très heureux ne se trouvent pas dans la même région que ceux pas heureux
+
+fviz_ca_row(res.ca, repel = TRUE)#Visualisation des profils lignes
+corrplot(row$cos2, is.corr = FALSE)# graphique du Cos2 des profils lignes sur tous les axes
+fviz_cos2(res.ca, choice = "row")# graphique du Cos2 des profiles lignes sur le 1er axe
+corrplot(row$contrib, is.corr=FALSE)# graphique de la contributions des profils lignes sur tous les axes
+fviz_contrib(res.ca, choice = "row")# graphique de la contribution des profiles lignes sur le 1er axe
+```
+
+```{r echo=FALSE}
+#Resultats pour les profils colonnes
+
+col<-get_ca_col(res.ca)
+col
+
+head(col$coord)# Coordonnees des profils colonnes
+#DU coté + de l'axe 1 on retrouve le profil des Européens, Américains contrairement au coté - ou on retrouve le profil des moins des Africains sub Sahara
+#la distribution du fait d'être heureux pour les Européens et Américains n'est pas la même que la distribution du fait d'être heureux pour les Africains sub Sahara
+
+
+head(col$cos2)# Cos2
+#les Africains SUb Sahara contribuent beaucoup, c'est eux qui caractérisent le coté - de l'axe 1
+#les Européns contribuent bcp, c'est eux qui caractérisent le coté - de l'axe 1
+head(col$contrib)# Contributions aux axes des profils colonnes
+
+fviz_ca_col(res.ca, repel = TRUE)#Visualisation des profils colonnes
+
+
+corrplot(col$cos2, is.corr = FALSE)# graphique du Cos2 des profils colonnes sur tous les axes
+fviz_cos2(res.ca, choice = "col")# graphique du Cos2 des profiles colonnes sur le 1er axe
+
+corrplot(col$contrib, is.corr=FALSE)# graphique de la contributions des profils colonnes sur tous les axes
+fviz_contrib(res.ca, choice = "col")# graphique de la contribution des profiles colonnes sur le 1er axe
+```
+
+```{r echo=FALSE}
+# Representation graphique simultanee
+
+fviz_ca_biplot (res.ca, repel = TRUE) #Visualisation des profils lignes et colonnes dans un meme graphique
+#seules les distances entre les profils lignes entre eux ou entre les profils colonnes entre eux peuvent s'interpreter
+
+#on retrouve profil ligne et profil colonne
+#plus les points de mêmes couleurs sont proches plus ils ont la même opinion
+#entre points différents c'est juste pour aiguiller
+#on doit revenir vers le tableau de contingence et les profil pour voir si lien
+
+
+#Description des dimensions et mise en evidence des profils qui contribuent le plus aux axes 
+
+# Description de la dimension
+res.desc <- dimdesc(res.ca, axes = c(1, 2))
+head(res.desc[[1]]$row, 4) # Description de la dimension 1 par les lignes
+head(res.desc[[1]]$col, 4) # Description de la dimension 1 par les colonnes
+
+
+```
+
+#### Entre le fait d'être heureux et le régime politique
+
+```{r echo=FALSE}
+#Mise en place de l'AFC
+res.ca <- CA(contingence_h_p, graph = FALSE) 
+print(res.ca)
+#visualisation des valeurs propres
+eig.val <- get_eigenvalue(res.ca)
+eig.val
+#3 valeurs propres car min(n-1)(p-1)
+fviz_eig(res.ca, addlabels = TRUE, ylim = c(0,100))#graphique des valeurs propres avec la 
+#Visualisation des profils lignes et colonnes dans un meme graphique
+#on garde que 1 axe, car coude
+
+fviz_ca_biplot (res.ca, repel = TRUE) 
+
+
+```
+
+```{r echo=FALSE}
+#Resultats pour les profils lignes
+
+row<-get_ca_row(res.ca)
+row
+
+head(row$coord)# Coordonnees des profils lignes
+
+#DU coté + de l'axe on retrouve le profil des très heureux contrairement au coté - ou on retrouve le profil des pas heureux et peu heureux
+#le régime politique pour ceux très heureux n'est pas la même que le régime politique pour les peu et pas heureux
+#ceux très heureux n'ont pas le même régime politique que ceux pas heureux
+
+
+head(row$cos2)# Cos2
+
+head(row$contrib)# Contributions aux axes des profils lignes
+
+fviz_ca_row(res.ca, repel = TRUE)#Visualisation des profils lignes
+
+
+
+
+corrplot(row$cos2, is.corr = FALSE)# graphique du Cos2 des profils lignes sur tous les axes
+fviz_cos2(res.ca, choice = "row")# graphique du Cos2 des profiles lignes sur le 1er axe
+
+
+corrplot(row$contrib, is.corr=FALSE)# graphique de la contributions des profils lignes sur tous les axes
+fviz_contrib(res.ca, choice = "row")# graphique de la contribution des profiles lignes sur le 1er axe
+
+```
+
+```{r echo=FALSE}
+#Resultats pour les profils colonnes 
+col<-get_ca_col(res.ca)
+col
+
+head(col$coord,12)# Coordonnees des profils colonnes
+#DU coté + de l'axe 1 on retrouve le profil des Monarchies avec fonctions symboliques et Régime directorial contrairement au coté - ou on retrouve le profil des Etats à parti unique, Monarchie à pouvoir effectif, régime hybride et régime présidentiel avec premier ministre
+#la distribution du fait d'être heureux pour les monarchies à fonctions symboliques et régime directorial n'est pas la même que la distribution du fait d'être heureux pour les Etats à parti unique et monarchie à pouvoir effectif
+
+
+head(col$cos2,12)# Cos2
+
+#les Régimes présidentiels avec Premier ministre, Etats à parti unique et monarchie à pouvoir effectif contribuent bcp, c'est eux qui caractérisent le coté - de l'axe 1
+#les monarchies à pouvoir symbolique et régime directorial contribuent bcp, c'est eux qui caractérisent le coté - de l'axe 1
+
+head(col$contrib,12)# Contributions aux axes des profils colonnes
+
+fviz_ca_col(res.ca, repel = TRUE)#Visualisation des profils colonnes
+
+
+corrplot(col$cos2, is.corr = FALSE)# graphique du Cos2 des profils colonnes sur tous les axes
+fviz_cos2(res.ca, choice = "col")# graphique du Cos2 des profiles colonnes sur le 1er axe
+
+corrplot(col$contrib, is.corr=FALSE)# graphique de la contributions des profils colonnes sur tous les axes
+fviz_contrib(res.ca, choice = "col")# graphique de la contribution des profiles colonnes sur le 1er axe
+
+
+```
+
+```{r echo=FALSE}
+
+#
+# Representation graphique simultanee 
+#
+fviz_ca_biplot (res.ca, repel = TRUE) #Visualisation des profils lignes et colonnes dans un meme graphique
+
+
+#on retrouve profil ligne et profil colonne
+#plus points de mêmes couleurs sonr ptoche plus ils ont la même opinion
+#entre points différents c'est juste pour aiguiller
+#on doit revenir vers le tableau de contingence et les profil pour voir si lien
+
+
+#Description des dimensions et mise en evidence des profils qui contribuent le plus aux axes 
+# Description de la dimension
+res.desc <- dimdesc(res.ca, axes = c(1, 2))
+head(res.desc[[1]]$row, 4) # Description de la dimension 1 par les lignes
+head(res.desc[[1]]$col, 4) # Description de la dimension 1 par les colonnes
+
+
+```
+
+
+## **Analyse des correspondances multiples**
+
+### *Préparation des données*
+
+```{r echo=FALSE}
+data = data_0[c(8,14:16,18)]
+#var 8= index qui passera en quanti sup
+#autres vars = Région, Régime politique et liberté sur internet
+```
+
+### *Mise en place de l'ACM*
+
+```{r echo=FALSE}
+
+# Analyse correspondances multiples (ACM) 
+
+res.mca <- MCA (data, quanti.sup = 1, graph = TRUE)  #calcul de l'ACM, resultats mis dans une variable
+print(res.mca) #Variable resultat contient tous les elements suivants
+
+
+#p-s valeurs propres avec s = nb de variables
+#ici 15 (13-4)
+#Visualisation des valeurs propres
+eig.val <- get_eigenvalue(res.mca) 
+eig.val
+
+fviz_eig(res.mca, addlabels = TRUE, ylim = c(0, 50)) #graphique des valeurs propres avec la fonction fviz_eig() ou fviz_screeplot() du package factoextra
+#avec coude on garde 1 axe, (1/9 = 0.111 donc 11%), donc il devrait avoir 11 sur chaque axe, dans le 1 on en retrouve 28
+#donc c'est beaucoup plus, donc il est bien représentatif
+#pour l'axe 2, par rapport à moyenne, il est au dessus 
+
+```
+
+```{r echo=FALSE}
+#on va corriger les valeurs propres avec la correction de Benzécri
+res.mca.ben = epMCA(data[,1:5], graphs = FALSE, correction = "b")
+fviz_eig(res.mca.ben)
+#donc toute l'inertie sur l'axe 1
+
+
+```
+
+### *Résultats pour les individus*
+
+```{r echo=FALSE}
+#Rzsultats pour les individus (= points lignes)
+#
+ind <- get_mca_ind (res.mca)
+ind
+
+ind$coord# Coordonnees des profils lignes
+
+
+ind$cos2# Cos2: qualite de representation des profils lignes
+ind$contrib# Contributions aux axes des profils lignes
+#Visualisation des points lignes
+fviz_mca_ind(res.mca, select.ind = list(cos2 = 80),col.ind = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE 
+)                   
+#du coté + de l'axe 1 on retrouve Australie, Autriche, Belgique, Canada,etc
+#du coté - de l'axe 1 on retrouve Chine, Afghanistan, Turkemistan, Ethipi, etc
+#ces deux groupes de pays ne seront pas noté de la même facon
+
+
+```
+
+### *Résultats pourles modalités*
+
+```{r echo=FALSE}
+#Resultats pour les modalites (=points colonnes)
+#
+var <- get_mca_var(res.mca)
+var
+
+head(var$coord)# Coordonnees des points colonnes
+head(var$cos2)# Cos2: qualite de representation des points colonnes
+head(var$contrib)# Contributions aux axes des points colonnes
+
+fviz_mca_var (res.mca, choice = "mca.cor", repel = TRUE) #Visualisation de la correlation des variables avec les axes
+
+
+corrplot(var$cos2, is.corr=FALSE)# graphique du Cos2 des points colonnes sur tous les axes
+fviz_cos2(res.mca, choice = "var")# graphique du Cos2 des points colonnes sur le 1er axe
+corrplot(var$contrib, is.corr=FALSE)# graphique de la contributions des points colonnes sur tous les axes
+fviz_contrib(res.mca, choice = "var")# graphique de la contribution des points colonnes sur le 1er axe
+
+
+```
+```{r echo=FALSE}
+
+#Description des dimensions et mise en evidence des points qui contribuent le plus aux axes 
+
+# Description de la dimension
+res.desc <- dimdesc(res.mca, axes = c(1, 2))#fonction dimdesc() [dans FactoMineR]
+res.desc[[1]]
+res.desc[[2]]
+
+var
+coord = var$coord[,1]
+contrib = var$contrib[,1]
+cos2 = var$cos2[,1]
+display = cbind(coord, contrib, cos2)
+display
+
+#du coté + de l'axe 1 on retrouve l'accès à internet à plus de 75% de la population, être libre sur internet, plus de 15 ans d'étude, être une monarchie
+#du coté + de l'axe 1 on retrouve l'accès à internet à moins de 25% de la population, moins de 10 ans d'étude, être une dictature
+
+# Biplot des lignes et colonnes
+fviz_mca_biplot(res.mca, select.ind = list(cos2 = 75),
+                repel = TRUE 
+)  
+```
+
+## **Classification**
+
+### *1ere classification avec les CAH*
+
+#### Préparation des données
+
+```{r}
+#On ne garde que les variables quantitatives
+data <- data_0[,1:10]
+#Certaines variables n'ont pas les mêmes échelles de grandeurs
+#On décide donc de centrer et réduire les données
+data.cr<-scale(data, center = T, scale=T)
+
+#matrice des distances entre individus
+d.data <- dist(data.cr)
+```
+
+#### Mise en place du dendrogramme
+
+```{r}
+#CAH - critère de Ward
+#method = « ward.D2 » correspond au vrai critère de Ward
+#utilisant le carré de la distance
+cah.ward <- hclust(d.data,method="ward.D2")
+
+#affichage dendrogramme
+plot(cah.ward)
+
+#Au vu du dendogramme, on pourrait décider décider de découper en 5 classes
+
+#On regarde l'inertie expliquée par classes
+inertie <- sort(cah.ward$height, decreasing = TRUE)
+
+
+plot(inertie[1:20], type = "s", xlab = "Nombre de classes", ylab = "Inertie")
+#On remarque des sauts assez conséquents jusque la classe 6, puis les sauts deviennent plus faibles
+#On peut donc choisir de découper en 6 groupes
+
+#dendrogramme avec matérialisation des groupes
+plot(cah.ward)
+rect.hclust(cah.ward,k=6)
+#découpage en 6 groupes
+groupes.cah <- cutree(cah.ward,k=6)
+
+```
+
+#### Analyse des groupes
+
+```{r}
+#liste des groupes
+print(sort(groupes.cah))
+
+#difficile d'analyser les groupes au 1er abord, on va donc compléter l'analyse avec une acp normée
+#ACP normée
+acp <- princomp(data,cor=T,scores=T)
+#screeplot - 1 axe retenu
+plot(1:10,acp$sdev^2,type="b",xlab="Nb. de facteurs",ylab="Val. Propres")
+#biplot
+biplot(acp,cex=0.60,col=c("orange","red"),xlim=c(-0.3,0.3),ylim=c(-0.45,0.25))
+
+#On distingue clairement un individu atypique : le luxembourg qui a une empreinte très élevée par rapport aux autres pays
+#positionnement des groupes dans le plan factoriel avec étiquettes des points
+plot(acp$scores[,1],acp$scores[,2],type="n",xlim=c(-5,5),ylim=c(-5,5))
+
+text(acp$scores[,1],acp$scores[,2],col=c("red","green","blue","black","orange","grey")[groupes.cah],cex
+     =0.65,labels=rownames(data),xlim=c(-5,5),ylim=c(-5,5))
+
+#A première vu on remarque qu'on a, du côté positif de l'axe, les pays qui ont des fortes valeurs dans les variables espérance, inégalités d'espérance, bien être, heureux, inégalité de bien être et une faible valeur concernant les inégalités de revenus. A l'inverse, du côté négatif, on retrouve les pays qui ont de fortes inégalités de revenus mais de faibles valeurs dans les variables espérance, inégalités d'espérance, bien être, heureux, inégalité de bien être.
+
+#2 individus sont isolés car ils possèdent une population très élevée : L'inde et la Chine
+#Nous savions également que le PIB aurait un impact sur la construction des groupes, nous décidons donc
+#de refaire une classification sans le luxembourg et sans les variables pib/population
+
+```
+
+### *2eme classification avec les CAH sans les individus atypiques*
+#### Préparation des données
+
+```{r}
+#CAH sans le luxembourg, pib, population
+data <- data_0[-73,1:8]
+#Certaines variables n'ont pas les mêmes échelles de grandeurs
+#On décide donc de centrer et réduire les données
+data.cr<-scale(data, center = T, scale=T)
+
+#matrice des distances entre individus
+d.data <- dist(data.cr)
+
+```
+
+#### Mise en place du dendrogramme
+
+```{r}
+#CAH - critère de Ward
+#method = « ward.D2 » correspond au vrai critère de Ward
+#utilisant le carré de la distance
+cah.ward <- hclust(d.data,method="ward.D2")
+
+#affichage dendrogramme
+plot(cah.ward)
+
+#Au vu du dendogramme, on pourrait décider décider de découper en 4 classes
+
+#On regarde l'inertie expliquée par classes
+inertie <- sort(cah.ward$height, decreasing = TRUE)
+
+plot(inertie[1:20], type = "s", xlab = "Nombre de classes", ylab = "Inertie")
+#On remarque des sauts assez conséquents jusque la classe 5, puis les sauts deviennent plus faibles
+#On peut donc choisir de découper en 5 groupes
+
+#dendrogramme avec matérialisation des groupes
+plot(cah.ward)
+rect.hclust(cah.ward,k=5)
+#découpage en 5 groupes
+groupes.cah <- cutree(cah.ward,k=5)
+
+```
+
+#### Analyse des groupes
+
+```{r}
+#liste des groupes
+print(sort(groupes.cah))
+
+#difficile d'analyser les groupes au 1er abord, on va donc compléter l'analyse avec une acp normée
+#ACP normée
+acp <- princomp(data,cor=T,scores=T)
+var <- get_pca_var(acp) #Creation d'une variable "var" avec tous les resultats concernants les variables
+
+
+var
+coord = var$coord[,1]
+contrib = var$contrib[,1]
+cos2 = var$cos2[,1]
+display = cbind(coord, contrib, cos2)
+display
+#screeplot - 1 axe retenu
+plot(1:8,acp$sdev^2,type="b",xlab="Nb. de facteurs",ylab="Val. Propres")
+#biplot
+biplot(acp,cex=0.6,col=c("orange","red"))
+
+#positionnement des groupes dans le plan factoriel avec étiquettes des points
+plot(acp$scores[,1],acp$scores[,2],type="n",xlim=c(-5,5),ylim=c(-5,5))
+
+text(acp$scores[,1],acp$scores[,2],col=c("red","green","blue","black","orange")[groupes.cah],cex
+     =0.65,labels=rownames(data),xlim=c(-5,5),ylim=c(-5,5))
+
+#Le graphique suffit à résumer l'information il oppose les pays ayant un fort taux d'inégalités de revenu et de faible inégalités BE/Esperance et de  faible valeurs  dans : heureux esperance et bien être aux pays qui ont des fortes valeurs dans les variables espérance, inégalités d'espérance, bien être, heureux, inégalité de bien être et une faible valeur concernant les inégalités de revenus
+
+```
+
+### *Comparaison avec les kmeans*
+
+```{r}
+#kmeans avec les données centrées et réduites
+#center = 5nombre de groupes demandés
+#nstart = 5 nombre d'essais avec différents individus de départ
+
+groupes.kmeans<- kmeans (data.cr,centers=5,nstart=5)
+#affichage des résultats
+print(groupes.kmeans)
+
+#évaluation la proportion d'inertie expliquée
+inertie.expl <- rep(0,times=10)
+for (k in 2:10){
+  clus <- kmeans(data.cr,centers=k,nstart=5)
+  inertie.expl[k] <- clus$betweenss/clus$totss
+}
+#graphique
+plot(1:10,inertie.expl,type="b",xlab="Nb. de groupes",ylab="% inertie expliquée")
+#indice de Calinski Harabasz - utilisation du package fpc
+#évaluation des solutions
+sol.kmeans <- kmeansruns(data.cr,krange=2:10,criterion="ch")
+#graphique
+plot(1:10,sol.kmeans$crit,type="b",xlab="Nb. de groupes",ylab="Silhouette")
+
+plot(cah.ward)
+rect.hclust(cah.ward,k=3)
+
+#groupes
+groupes.subset <- cutree(cah.ward,k=3)
+#affichage des groupes
+print(sort(groupes.subset))
+#acp
+acp.subset <- princomp(data,cor=T,scores=T)
+#screeplot - 1 axe retenu
+plot(1:8,acp.subset$sdev^2,type="b")
+#biplot
+biplot(acp.subset,cex=0.65)
+plot(acp.subset$scores[,1],acp.subset$scores[,2],type="n",xlim=c(-5,5),ylim=c(-5,5))
+
+text(acp.subset$scores[,1],acp.subset$scores[,2],col=c("red","green","blue")[groupes.subset],cex
+     =0.65,labels=rownames(data),xlim=c(-5,5),ylim=c(-5,5))
+
+```
+
+### *Statistiques sur la construction des groupes*
+
+```{r}
+stat.comp <- function(x,y){
+  #nombre de groupes
+  K <- length(unique(y))
+  #nb. d'observations
+  n <- length(x)
+  #moyenne globale
+  m <- mean(x)
+  #variabilité totale
+  TSS <- sum((x-m)^2)
+  #effectifs conditionnels
+  nk <- table(y)
+  #moyennes conditionnelles
+  mk <- tapply(x,y,mean)
+  #variabilité expliquée
+  BSS <- sum(nk * (mk - m)^2)
+  #moyennes + prop. variance expliquée
+  result <- c(mk,100.0*BSS/TSS)
+  #nommer les élements du vecteur
+  names(result) <- c(paste("G",1:K),"% epl.")
+  #renvoyer le vecteur résultat
+  return(result)
+}
+#appliquer stat.comp aux variables de la base originelle fromage
+#et non pas aux variables centrées et réduites
+print(sapply(data,stat.comp,y=groupes.cah))
+print(sapply(data,stat.comp,y=groupes.subset))
+
+```
+
