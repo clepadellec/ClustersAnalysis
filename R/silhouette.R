@@ -1,0 +1,30 @@
+#' Title
+#'
+#' @param X a matrix or dataframe with explanatory variables
+#' @param y predicted labels for each row of X. It should be a factor
+#' @param d the distance measure to be used and this must be "euclidean" or "L1"
+#'
+#' @return Silhouette Coefficient of each row
+#' @export
+#'
+#' @examples
+#'
+silhouette_ind=function(X,y,d){
+  matrice_distance=matrix_distance(X,d)
+  moyenne_distance=mean_distance(matrice_distance,y)
+  sil=c()
+  m=nrow(moyenne_distance)
+  if (nlevels(y)==1){
+    return(rep(-1,m))
+  } else{
+    for (i in 1:m){
+      a=as.numeric(moyenne_distance[i,][as.character(y[i])])
+      b=min(as.numeric(moyenne_distance[i,colnames(moyenne_distance)!=as.character(y[i])]))
+      s=(b-a)/max(a,b)
+      sil=c(sil,s)
+    }
+  }
+
+  return(sil)
+
+}

@@ -14,3 +14,5 @@ viz_corr<- function(df){
   corr <- round(cor(df), 1)
   return(ggcorrplot(corr, hc.order = TRUE, type = "lower",lab = TRUE))
 }
+
+
