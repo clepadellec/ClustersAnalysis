@@ -15,13 +15,17 @@ silhouette_ind=function(X,y,d){
   sil=c()
   m=nrow(moyenne_distance)
   if (nlevels(y)==1){
-    return(rep(-1,m))
+    sil=rep(-1,m)
   } else{
     for (i in 1:m){
-      a=as.numeric(moyenne_distance[i,][as.character(y[i])])
-      b=min(as.numeric(moyenne_distance[i,colnames(moyenne_distance)!=as.character(y[i])]))
-      s=(b-a)/max(a,b)
-      sil=c(sil,s)
+      if (sum(y==y[i])==1){
+        sil[i]=-1
+      } else{
+        a=as.numeric(moyenne_distance[i,][as.character(y[i])])
+        b=min(as.numeric(moyenne_distance[i,colnames(moyenne_distance)!=as.character(y[i])]))
+        s=(b-a)/max(a,b)
+        sil=c(sil,s)
+      }
     }
   }
 
