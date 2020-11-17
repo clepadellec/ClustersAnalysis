@@ -17,3 +17,6 @@ contingence table, and profils
 \description{
 desc_prof
 }
+\examples{
+#desc_profils(data,"heureux_quali","Region")
+}

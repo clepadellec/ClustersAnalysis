@@ -9,12 +9,14 @@
 #' @export
 #' @import questionr
 #' @examples
+#'#desc_profils(data,"heureux_quali","Region")
 desc_profils <- function(data,name_var_group,name_var_comp){
-  contigence<-table(data[name_var_group][,1], data[name_var_comp][,1])
-  print("Tableau de contingence : \n")
+  contingence<-table(data[name_var_group][,1], data[name_var_comp][,1])
+  print("Tableau de contingence : ")
   print(contingence)
-  print("Profils lignes : \n")
-  lprop(contingence_h_r, digits=1)
-  print("Profils colonnes : \n")
-  cprop(contingence_h_r, digits=2)
+  print("Profils lignes : ")
+  print(lprop(contingence, digits=1))
+  print("Profils colonnes : ")
+  print(cprop(contingence, digits=2))
 }
+
