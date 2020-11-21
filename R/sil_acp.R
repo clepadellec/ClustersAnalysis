@@ -9,6 +9,11 @@
 #' @examples
 sil_pca_plot=function(X,y,d="Euclidean",i,j){
 
+  if (class(y)!="factor"){
+    return("y must be a factor")
+    stop()
+  }
+
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
     stop()

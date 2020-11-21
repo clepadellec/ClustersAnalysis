@@ -7,6 +7,7 @@
 
 #' @examples
 acp_2_axes=function(X,i,j){
+
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
     stop()
