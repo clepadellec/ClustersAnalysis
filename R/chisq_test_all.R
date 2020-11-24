@@ -17,22 +17,23 @@
 chisq_test_all <- function(name_var_group,data){
   options(warn=-1)
   others_var <- colnames(data)[colnames(data)!=name_var_group]
-  res <- matrix(data = NA, nrow = length(others_var), ncol = 4)
+  res <- matrix(data = NA, nrow = length(others_var), ncol = 5)
   for (i in 1:length(others_var)){
     res[i,1]<-name_var_group
     res[i,2]<-others_var[i]
     res[i,3]<-chisq.test(data[name_var_group][,1],data[others_var[i]][,1])$p.value
     if (round(as.numeric(res[i,3]),5)<0.05){
       res[i,4]<-"significatif"
+      t<- table(data[name_var_group][,1],data[others_var[i]][,1])
+      v<- cramer.v(t)
+      res[i,5]<-v
     }else{
       res[i,4]<-"non significatif"
+      res[i,5]<-NA
     }
 
   }
   res <- as.data.frame(res)
-  colnames(res)<-c("var.groupement","var.explicative","p.value.chisq.test","interpretation")
+  colnames(res)<-c("var.groupement","var.explicative","p.value.chisq.test","interpretation","intensité(v cramer)")
   return(res)
 }
-
-
-

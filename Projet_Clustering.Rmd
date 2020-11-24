@@ -517,6 +517,7 @@ head(res.desc[[1]]$col, 4) # Description de la dimension 1 par les colonnes
 
 ```{r echo=FALSE}
 data = data_0[c(8,14:16,18)]
+rownames(data)<-NULL
 print(data)
 #var 8= index qui passera en quanti sup
 #autres vars = R?gion, R?gime politique et libert? sur internet
@@ -562,14 +563,14 @@ fviz_eig(res.mca.ben)
 ind <- get_mca_ind (res.mca)
 ind
 
-ind$coord# Coordonnees des profils lignes
+#ind$coord# Coordonnees des profils lignes
 
 
-ind$cos2# Cos2: qualite de representation des profils lignes
-ind$contrib# Contributions aux axes des profils lignes
+#ind$cos2# Cos2: qualite de representation des profils lignes
+#ind$contrib# Contributions aux axes des profils lignes
 #Visualisation des points lignes
 fviz_mca_ind(res.mca, select.ind = list(cos2 = 80),col.ind = "contrib",
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),axes=c(3,4),geom="text",
              repel = TRUE 
 )                   
 #du cot? + de l'axe 1 on retrouve Australie, Autriche, Belgique, Canada,etc
