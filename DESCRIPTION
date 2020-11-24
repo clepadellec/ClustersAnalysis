@@ -18,6 +18,5 @@ Imports:
   questionr,
   ggcorrplot,
   FactoMineR,
-  factoextra,
-  dplyr
+  factoextra
 
