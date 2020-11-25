@@ -517,7 +517,7 @@ head(res.desc[[1]]$col, 4) # Description de la dimension 1 par les colonnes
 
 ```{r echo=FALSE}
 data = data_0[c(8,14:16,18)]
-rownames(data)<-NULL
+#rownames(data)<-NULL
 print(data)
 #var 8= index qui passera en quanti sup
 #autres vars = R?gion, R?gime politique et libert? sur internet

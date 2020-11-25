@@ -27,4 +27,4 @@ shapiro_test <- function(data){
   return(res)
 }
 
-res = shapiro_test(X[[1]])
+#res = shapiro_test(X[[1]])

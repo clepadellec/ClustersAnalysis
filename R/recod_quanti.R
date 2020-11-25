@@ -19,7 +19,8 @@ recod_quanti <- function(data, var_quanti,cutting){
   return(data)
 }
 
-data[record][,1] <- cut(data[,index], breaks = cutting, include.lowest = TRUE, labels = liste_labels)
 
-data1 <- recod_quanti(data_0, 'Heureux', 4)
+#data[record][,1] <- cut(data[,index], breaks = cutting, include.lowest = TRUE, labels = liste_labels)
+
+#data1 <- recod_quanti(data_0, 'Heureux', 4)
 
