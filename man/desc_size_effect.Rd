@@ -4,7 +4,7 @@
 \alias{desc_size_effect}
 \title{Title}
 \usage{
-desc_size_effect(df, var_expli, target_grp)
+desc_size_effect(df, target_grp, var_expli)
 }
 \arguments{
 \item{df}{the dataframe}
@@ -16,4 +16,10 @@ a description (distribution) of size effect between a group choose by the user a
 }
 \description{
 Title
+}
+\examples{
+#data = data_0[c(14:16,18)]
+#desc_size_effect(data,'liberte_internet','RÃ©gime_simp')
+
+
 }
