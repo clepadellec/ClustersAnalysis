@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-sil_pca_plot=function(X,y,d="Euclidean",i,j){
+sil_pca_plot=function(X,y,d="euclidean",i,j){
 
   if (class(y)!="factor"){
     return("y must be a factor")
