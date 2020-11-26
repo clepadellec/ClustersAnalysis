@@ -12,7 +12,7 @@ kmean_rand_index=function(X,y){
   X_cr=scale(X,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
-  rand=rand_index(as.numeric(n_means$cluster),y)
+  rand=rand_index(n_means$cluster,y)
   return(rand)
 
 }
