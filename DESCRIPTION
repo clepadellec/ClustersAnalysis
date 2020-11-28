@@ -19,5 +19,6 @@ Imports:
   ggcorrplot,
   FactoMineR,
   factoextra,
-  rdist
+  rdist,
+  dplyr
 
