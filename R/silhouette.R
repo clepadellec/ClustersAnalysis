@@ -9,8 +9,27 @@
 #'
 #' @examples
 #'
-silhouette_ind=function(X,y,d){
-  matrice_distance=matrix_distance(X,d)
+silhouette_ind=function(X,y,rescale=FALSE,d='euclidean'){
+
+  if (data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (data_type(X)=='quantitative-qualitative'|data_type(X)=='qualitatives'){
+      X_bis=dummy_data(X,rescale)
+  }
+
+  if (data_type(X)=='qualitative'){
+    X_bis=dummy_cols(data.frame(X), remove_first_dummy  = F)[,-1]
+  }
+
+
+
+  matrice_distance=matrix_distance(X_bis,d)
   moyenne_distance=mean_distance(matrice_distance,y)
   sil=c()
   m=nrow(moyenne_distance)

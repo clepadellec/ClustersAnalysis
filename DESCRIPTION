@@ -20,5 +20,6 @@ Imports:
   FactoMineR,
   factoextra,
   rdist,
-  dplyr
+  dplyr,
+  fastDummies
 

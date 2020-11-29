@@ -4,7 +4,7 @@
 \alias{acp_2_axes}
 \title{Title}
 \usage{
-acp_2_axes(X, i, j)
+acp_2_axes(X, i = 1, j = 2, rescale = FALSE)
 }
 \value{
 

@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-sil_pca_plot=function(X,y,d="euclidean",i,j){
+sil_pca_plot=function(X,y,i=1,j=2, rescale=FALSE, d="euclidean"){
 
   if (class(y)!="factor"){
     return("y must be a factor")
@@ -19,8 +19,27 @@ sil_pca_plot=function(X,y,d="euclidean",i,j){
     stop()
   }
 
-  acp=acp_2_axes(X,i,j)
-  sil=silhouette_ind(X,y,d)
+
+  if (data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (data_type(X)=='quantitative-qualitative'|data_type(X)=='qualitatives'){
+    X_bis=dummy_data(X,rescale)
+  }
+
+  if (data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
+
+
+  acp=acp_2_axes(X_bis,i,j)
+  sil=silhouette_ind(X,y,rescale,d)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
   percent1=as.numeric(substr(a,11,12))

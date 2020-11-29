@@ -4,7 +4,7 @@
 \alias{sil_pca_plot}
 \title{Title}
 \usage{
-sil_pca_plot(X, y, d = "euclidean", i, j)
+sil_pca_plot(X, y, i = 1, j = 2, rescale = FALSE, d = "euclidean")
 }
 \value{
 

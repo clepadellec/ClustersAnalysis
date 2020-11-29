@@ -4,7 +4,7 @@
 \alias{silhouette_ind}
 \title{Title}
 \usage{
-silhouette_ind(X, y, d)
+silhouette_ind(X, y, rescale = FALSE, d = "euclidean")
 }
 \arguments{
 \item{X}{a matrix or dataframe with explanatory variables}
