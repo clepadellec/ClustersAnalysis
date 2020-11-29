@@ -4,7 +4,7 @@
 \alias{silhouette_plot}
 \title{Title}
 \usage{
-silhouette_plot(X, y, d)
+silhouette_plot(X, y, rescale = FALSE, d = "euclidean")
 }
 \arguments{
 \item{X}{a matrix or dataframe with explanatory variables}

@@ -9,8 +9,12 @@
 #' @import ggplot2
 #'
 #' @examples
-silhouette_plot=function(X,y,d){
-  sil=silhouette_ind(X,y,d)
+silhouette_plot=function(X,y, rescale=FALSE, d="euclidean"){
+
+
+
+
+  sil=silhouette_ind(X,y,rescale,d)
   df=data.frame("silhouette"=sil, "cluster"=y)
 
   # data frame contains the mean silhouette coefficient of clusters
