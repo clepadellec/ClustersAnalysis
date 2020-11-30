@@ -4,7 +4,7 @@
 \alias{acm_plot}
 \title{Title}
 \usage{
-acm_plot(df, dims, name_ind = 0)
+acm_plot(df, dims, name_ind = 0, qtsup = NULL)
 }
 \arguments{
 \item{df}{a dataframe with qualitatives features}

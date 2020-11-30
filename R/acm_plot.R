@@ -11,11 +11,11 @@
 #'
 #' @examples
 #'
-acm_plot <- function(df,dims,name_ind=0){
+acm_plot <- function(df,dims,name_ind=0, qtsup=NULL){
   if (name_ind != 0){
     rownames(df)=name_ind
   }
-  res.mca <- MCA (df, graph = FALSE)
+  res.mca <- MCA (df, graph = FALSE, quanti.sup=qtsup)
   ind <- get_mca_ind (res.mca)
   var <- get_mca_var(res.mca)
   corrplot(var$cos2, is.corr=FALSE)
