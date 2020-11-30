@@ -10,6 +10,9 @@
 #'
 #' @examples
 dummy_data=function(data, rescale=FALSE){
+
+  dataf=data
+
   col_names=colnames(data)
   t=sapply(data, type_variable)
   variable_qualitative=colnames(data)[t=="qualitative"]
@@ -21,11 +24,12 @@ dummy_data=function(data, rescale=FALSE){
   dataf= dummy_cols(data, select_columns = variable_qualitative, remove_selected_columns = TRUE)
   }
 
-  if (length(variable_quantitative)==0){
-    return("There is no quantitative variable in this data")
-    break
-  } else{
-    if (rescale==TRUE){
+
+  if (rescale==TRUE){
+    if (length(variable_quantitative)==0){
+      return("There is no quantitative variable in this data")
+      break
+      } else{
       for (i in variable_quantitative){
       dataf[i]=scale(dataf[i], center = T, scale = T)
     }

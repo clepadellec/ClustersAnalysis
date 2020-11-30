@@ -4,7 +4,7 @@
 \alias{R2_multivariate}
 \title{Title}
 \usage{
-R2_multivariate(data, g)
+R2_multivariate(data, g, method = "encoding")
 }
 \arguments{
 \item{data}{a datafram or matrix with quantitative value}

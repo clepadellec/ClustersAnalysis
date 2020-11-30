@@ -9,12 +9,12 @@
 #'
 #' @examples
 data_type=function(X){
-#  quali_quanti=apply(X,MARGIN = 1, FUN = type_variable)
-  quali_quanti=c()
-  n=ncol(X)
-  for (i in 1:n){
-    quali_quanti=c(quali_quanti,type_variable(X[,i]))
-  }
+  quali_quanti=sapply(X, FUN = type_variable)
+#  quali_quanti=c()
+#  n=ncol(X)
+#  for (i in 1:n){
+#    quali_quanti=c(quali_quanti,type_variable(X[,i]))
+#  }
   tab=table(quali_quanti)
   name=names(tab)
   if (length(name)==2){
