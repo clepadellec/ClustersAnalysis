@@ -10,3 +10,20 @@ extract_ql : extraction de l'ensemble des variables quali du dataframe
 mode_var : retourne le mode d'une variable quali
 
 idée : approfondir l'effet taille, rajouts des tests préalables sur les fonctions pour éviter les erreurs
+
+QUANTI/QUALI - Mélange QUANTI-QUALI/QUALI
+
+Uni-Multi: test_value_quanti(data, groupe, option i=i si on veut tester sur la i-ème classe): calcul du valeur test pour chaque variable quantitative contre la variable classe---Pour trouver quel est la variable qui caracterise le meilleur une classe.
+Uni-Multi: silhouette(data,groupe,rescale=FALSE,d='euclidean'): renvoie un vector qui contient l'indice de silhouette pour chaque individus en utilisant la distance de Euclidean et sans rescale le data par défaut. Le data d'entré pour cette fonction contient peut être une quali/une quanti/des qualis/des quantis/ mélange quali-quanti. 
+Multi: sil_acp(data, groupe, i, j, rescale=False, distance='euclidean'): representer des individus en utilisant ACP selon i-ième et j-ième composantes principales, les couleurs des individus sont en fonction de leur indice de Silhouette. Le data d'entré pour cette fonction contient peut être une quali/une quanti/des qualis/des quantis/ mélange quali-quanti. 
+Uni-Multi: silhouette_plot(data, groupe, rescale=FALSE, d='euclidean'): Plot indice de silhouette par classe. Le grand carre qu'on se trouve à la sortie est l'indice de Silhouette moyen pour chaque classe. Plus indice est proche de 1, plus ce classe est séparé par rapport aux autres classes. Le data d'entré pour cette fonction contient peut être une quali/une quanti/des qualis/des quantis/ mélange quali-quanti. 
+Uni: fisher_test_all(data, groupe): test de Fisher du rapport de correlation entre une variable quantitative et la variable classe (qualitative). 
+rand_index(g1,g2): calcul l'indice de Rand de deux clustering pour voir si ces deux clusterings ont la similarité, plus l'indice de Rand proche de 1, plus ces deux clustering sont proches. 
+Uni-Multi: kmean_rand_index(data, groupe): on effectue un kmean sur le data pour avoir des classes et ensuite on calcule l'indice de Rand entre des classes du kmean et des classes initials (variable groupe).
+Multi: compare_kmean_clustering(data, groupe, i, j): projecter les individus sur le i-ieme et j-ieme plan factoriels, les shapes des individus sont en fonction de groupe initial et les couleurs sont en fonction des classes à travers du kmeans. 
+Multi: rapport_corr_multivariate_quanti(data, groupe): rapport de correlation pour le cas multivariable quantitatives --- géneralisation du cas rapport de corelation univarie (fonction fisher_test_all ci-dessus).
+matrix_distance(data, d): calcul la distance entre deux individus et ca renvoie une matrice des distances. Cette fonction sert à calculer l'indice de silhouette.
+mean_distance(data, group): calcul la distance moyenne entre 1 individus et une classe (cette quantité est égale à la moyenne de la distance entre cet individus et des individus de cette classe). Cette fonction sert à calculer l'indice de silhouette.
+type_variable(x): déterminer le type d'une variable
+data_type(data): déterminer le type du data --- on a 5 types: qualitative/quantitative/qualitatives/quantitatives/mélange quali-quanti. 
+
