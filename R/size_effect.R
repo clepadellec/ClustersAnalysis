@@ -14,12 +14,15 @@
 #'
 #'
 desc_size_effect <- function(df,target_grp,var_expli){
-  #à compléter
-  #http://eric.univ-lyon2.fr/~ricco/cours/slides/effect_size.pdf | slide 18
+
+  #on fait un tableau de contingence entre variable de groupe et variable expli quali
   tab_base <- table(df[[target_grp]],df[[var_expli]])
+  #on ajoute les totaux
   tab <- addmargins(tab_base)
+  #on affiche le tableau
   print(tab)
   vtest <- tab_base
+  #pour chaque paire de modalités on calcule le vtest
   for (i in 1:nrow(tab_base)){
     for (j in 1:ncol(tab_base)){
       prop_l_g <- tab[i,j]/tab[i,ncol(tab_base)+1]

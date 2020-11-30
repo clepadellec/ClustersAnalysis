@@ -1,13 +1,13 @@
 
 QUALI/QUALI :
 
-size_effect : calcul l'effet taille pour chaque combinaison groupe(de la variable clsuters)/modalité cible(d'une variable explicative quali)
-acm_plot : effectue une acm sur toutes les variables qualitatives, projection en fonction des axes rentrés par l'utilisateur, corrplot pour voir la contribution aux axes, possibilité de données des noms aux individus
-chisq_test_all : effectue un test de khi deux entre la vriable de groupe et chaque variable quali, interprète le khi deux et dans le cas ou c'est significatif calcule le v de cramer pour mesurer l'intensité
-afc_plot : effectue une afc entre la variable de groupe et une variable quali
-desc_prof : calcul des profils lignes et colonnes pour mieux connaître la répartition entre la variable de groupe et une variable quali
-extract_ql : extraction de l'ensemble des variables quali du dataframe
-mode_var : retourne le mode d'une variable quali
+Uni : size_effect(df,target_grp= la variable de groupe,var_expli= la variable explicative a tester) : calcul l'effet taille pour chaque combinaison groupe(de la variable clsuters)/modalité cible(d'une variable explicative quali)
+Multi : acm_plot(df,dims les dimensions de l'acm a afficher,name_ind= les rownames si il y en a, qtsup=quanti supp a ajouter sur l'acm) : effectue une acm sur toutes les variables qualitatives, projection en fonction des axes rentrés par l'utilisateur, corrplot pour voir la contribution aux axes, possibilité de données des noms aux individus
+Uni : chisq_test_all(name_var_group= la variable de groupe,data) : effectue un test de khi deux entre la vriable de groupe et chaque variable quali, interprète le khi deux et dans le cas ou c'est significatif calcule le v de cramer pour mesurer l'intensité
+Uni : afc_plot(contingence= tab de contingence entre variable de groupe et variable expli) : effectue une afc entre la variable de groupe et une variable quali
+Uni : desc_prof(data,name_var_group= la variable de groupe,name_var_comp= variable explicative quali) : calcul des profils lignes et colonnes pour mieux connaître la répartition entre la variable de groupe et une variable quali
+Autres : extract_ql(data) : extraction de l'ensemble des variables quali du dataframe
+Autres : mode_var(x=une variable quali) : retourne le mode d'une variable quali
 
 idée : approfondir l'effet taille, rajouts des tests préalables sur les fonctions pour éviter les erreurs
 

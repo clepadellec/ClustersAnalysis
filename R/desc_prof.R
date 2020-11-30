@@ -11,7 +11,9 @@
 #' @examples
 #'#desc_profils(data,"heureux_quali","Region")
 desc_profils <- function(data,name_var_group,name_var_comp){
+  #mise en place du tableau de contingence
   contingence<-table(data[name_var_group][,1], data[name_var_comp][,1])
+  #on affiche les resultats
   print("Tableau de contingence : ")
   print(contingence)
   print("Profils lignes : ")
