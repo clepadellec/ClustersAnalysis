@@ -7,9 +7,9 @@
 Univariate_object(df, ind_group_class)
 }
 \arguments{
-\item{df}{your dataframe including explanatory features and the group feature(target)}
+\item{df}{your dataframe including explanatory variables and the group variable(target)}
 
-\item{ind_group_class}{the indice of your group feature}
+\item{ind_group_class}{the indice of your group variable}
 }
 \value{
 an object which is going to be use to analyze clustering

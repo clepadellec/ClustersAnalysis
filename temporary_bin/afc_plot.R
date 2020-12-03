@@ -7,7 +7,7 @@
 #' @return
 #' @export
 #' @import FactoMineR
-#' @imort factoextra
+#' @import factoextra
 #'
 #' @examples
 #'

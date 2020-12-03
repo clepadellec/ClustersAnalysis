@@ -9,8 +9,6 @@
 #' @export
 #'
 #' @examples
-#' #data = data_0[c(14:16,18)]
-#' #desc_size_effect(data,'liberte_internet','Régime_simp')
 #'
 #'
 desc_size_effect <- function(df,target_grp,var_expli){

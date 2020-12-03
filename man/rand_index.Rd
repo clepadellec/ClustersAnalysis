@@ -14,7 +14,7 @@ rand_index(g1, g2)
 \item{g2}{second cluster}
 }
 \value{
-
+Rand index measure to compare the similarity of two clustering.
 
 Rand index measure to compare the similarity of two clustering.
 }

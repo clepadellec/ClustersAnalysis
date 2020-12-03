@@ -1,7 +1,7 @@
 #' Title
 #'
-#' @param df your dataframe including explanatory features and the group feature(target)
-#' @param ind_group_class the indice of your group feature
+#' @param df your dataframe including explanatory variables and the group variable(target)
+#' @param ind_group_class the indice of your group variable
 #'
 #' @return an object which is going to be use to analyze clustering
 #' @export
@@ -42,12 +42,12 @@ Univariate_object <- function(df,ind_group_class){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp the qualitative explonatory feature
+#' @param ind_var_exp the qualitative explonatory variable
 #'
-#' @return the vtest value for each class(group feature)/modality(explonatory feature)
+#' @return the vtest value for each class(group variable)/modality(explonatory variable)
 #' @export
 #'
-#' @examples
+#' @examples desc_size_effect((Univariate_object(esoph,1)),3)
 #'
 desc_size_effect <- function(object,ind_var_exp){
 
@@ -78,10 +78,11 @@ desc_size_effect <- function(object,ind_var_exp){
 #'
 #' @param object your Univariate object
 #'
-#' @return all the chisq.test value between your qualitatives features and your group feature (with interpretation)
+#' @return all the chisq.test value between your qualitatives variables and your group variable (with interpretation)
+#' @import questionr
 #' @export
 #'
-#' @examples
+#' @examples chisq_test_all(Univariate_object(esoph,1))
 chisq_test_all <- function(object){
   options(warn=-1)
   if (length(object$ind.quan[object$ind.qual==TRUE]==1)){
@@ -117,12 +118,14 @@ chisq_test_all <- function(object){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp
+#' @param ind_var_exp the indice of the explonatory variable (only qualitative)
 #'
-#' @return
+#' @return a factorial projection between group variable and explonatory variable
+#' @import FactoMineR
+#' @import factoextra
 #' @export
 #'
-#' @examples
+#' @examples afc_plot((Univariate_object(esoph,1)),3)
 afc_plot <- function(object,ind_var_exp){
   if (is.character(object$df[[ind_var_exp]])==FALSE & is.factor(object$df[[ind_var_exp]])==FALSE){
     return("Votre variable explicative n'est pas qualitative ! ")
@@ -139,12 +142,13 @@ afc_plot <- function(object,ind_var_exp){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp
+#' @param ind_var_exp the indice of the explonatory variable (only qualitative)
 #'
-#' @return
+#' @return contingency table between group and explonatory variables and the rows and columns profils
+#' @import questionr
 #' @export
 #'
-#' @examples
+#' @examples desc_profils((Univariate_object(esoph,1)),3)
 desc_profils <- function(object,ind_var_exp){
   if (is.character(object$df[[ind_var_exp]])==FALSE & is.factor(object$df[[ind_var_exp]])==FALSE){
     return("Votre variable explicative n'est pas qualitative ! ")
@@ -163,10 +167,10 @@ desc_profils <- function(object,ind_var_exp){
 
 #' Title
 #'
-#' @param pop_a
-#' @param pop_b
+#' @param pop_a the first population to test
+#' @param pop_b the second population to test
 #'
-#' @return
+#' @return TRUE if gaussian hypothesis is verified or FALSE if it's not verified
 #' @export
 #'
 #' @examples
@@ -183,20 +187,20 @@ shapiro_test <- function(pop_a,pop_b){
 #'
 #' @param object your Univariate object
 #'
-#' @return
+#' @return a table with the combination of each group X explonatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
 #' @export
 #'
-#' @examples
+#' @examples ttest_all(Univariate_object(esoph,1))
 ttest_all <- function(object){
   df <- na.omit(object$df)
   var_groupe <- object$name_group
   data= df[ ,object$ind.quan]
   lst_grp <-unique(df[[var_groupe]])
   var_groupe <-df[[var_groupe]]
-
   data <- cbind(data,var_groupe)
   res <- matrix(data = NA, nrow = length(lst_grp), ncol = length(object$ind.quan[object$ind.quan==TRUE]))
   lig=1
+
   for (i in lst_grp){
     col=1
     new_data=data
@@ -216,13 +220,14 @@ ttest_all <- function(object){
 
       }else{
         res[lig,col]=NA
+
       }
       col=col+1
     }
     lig=lig+1
   }
   rownames(res)<- lst_grp
-  colnames(res)<- colnames(data[object$ind.quan])
+  colnames(res)<- colnames(object$df[object$ind.quan])
   return(res)
 }
 
@@ -230,13 +235,13 @@ ttest_all <- function(object){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param i
+#' @param i the number of your target group
 #'
-#' @return
+#' @return the explonatory variable which caracterize the most the class of your group variable you choose
 #' @export
 #'
-#' @examples
-test.value=function(object,i=1){
+#' @examples explonarory_test(Univariate_object(esoph,1))
+explonarory_test=function(object,i=1){
   var_groupe <- object$name_group
   data=object$df[ ,object$ind.quan]
 
@@ -278,9 +283,9 @@ test.value=function(object,i=1){
 
 #' Title
 #'
-#' @param x
+#' @param x variable to test
 #'
-#' @return
+#' @return variable type
 #' @export
 #'
 #' @examples
@@ -295,9 +300,9 @@ type_variable=function(x){
 
 #' Title
 #'
-#' @param X
+#' @param X a dataframe
 #'
-#' @return
+#' @return the variables types
 #' @export
 #'
 #' @examples
@@ -335,10 +340,12 @@ data_type=function(X){
 
 #' Title
 #'
-#' @param data
-#' @param rescale
+#' @param data a datafram
+#' @param rescale a boolean
 #'
-#' @return
+#' @return data encoding with rescale or not
+#'
+#' @import fastDummies
 #' @export
 #'
 #' @examples
@@ -370,6 +377,18 @@ dummy_data=function(data, rescale=FALSE){
   }
   return(dataf)
 }
+#' Title
+#'
+#' @param X a matrix or dataframe with explanatory variables
+#' @param d the distance measure to be used and this must be "euclidean" or "L1"
+#'
+#' @return the distance matrix computed by using the euclidean distance or L1 distance between the rows of X.
+#'
+#' @import rdist
+#'
+#' @export
+#'
+#' @examples
 matrix_distance=function(X,d){
   dist=pdist(X,d)
   return(dist)
@@ -377,11 +396,11 @@ matrix_distance=function(X,d){
 
 #' Title
 #'
-#' @param X
-#' @param y
+#' @param X a numeric symmetric matrix containing the pairwise distance between the rows of a data frame
+#' @param y a factor such that length(X)=length(y)
 #'
-#' @return
-#' @export
+#' @return a data frame containing the average distance of each row to all observations of each cluster C
+#'
 #'
 #' @examples
 mean_distance=function(X,y){
@@ -399,13 +418,13 @@ mean_distance=function(X,y){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param rescale
-#' @param d
+#' @param rescale rescale or not
+#' @param d distance type
 #'
-#' @return
+#' @return Silhouette Coefficient of each row
 #' @export
 #'
-#' @examples
+#' @examples #silhouette_ind(Univariate_object(esoph,1))
 silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
   indice= object$group
 
@@ -459,14 +478,16 @@ silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param rescale
-#' @param d
+#' @param y predicted labels for each row of X. It should be a factor
+#' @param d the distance measure to be used and this must be "euclidean" or "L1"
 #'
-#' @return
+#' @return the silhouette plot
+#'
 #' @export
+#' @import ggplot2
 #'
-#' @examples
-silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
+#' @examples #silhouette_plot_univ(Univariate_object(esoph,1))
+silhouette_plot_univ=function(object, rescale=FALSE, d="euclidean"){
   var_groupe <- object$name_group
   sil=silhouette_ind(object,rescale,d)
   y=object$df[[var_groupe]]
@@ -487,10 +508,10 @@ silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
 
 #' Title
 #'
-#' @param x
-#' @param g
+#' @param x a variable with quantitative value
+#' @param g a factor such that length(x)=length(g)
 #'
-#' @return
+#' @return correlation value
 #' @export
 #'
 #' @examples
@@ -507,10 +528,10 @@ eta2=function(x,g){
 #'
 #' @param object your Univariate object
 #'
-#' @return
+#' @return a dataframe with a summary of Fisher test between the target variable and others quanlitatives variables
 #' @export
 #'
-#' @examples
+#' @examples fisher_test_all(Univariate_object(esoph,1))
 fisher_test_all=function(object){
   var_groupe <- object$name_group
   data=object$df[ ,object$ind.quan]
@@ -526,10 +547,10 @@ fisher_test_all=function(object){
 
 #' Title
 #'
-#' @param g1
-#' @param g2
+#' @param g1 first cluster
+#' @param g2 second cluster
 #'
-#' @return
+#' @return Rand index measure to compare the similarity of two clustering.
 #' @export
 #'
 #' @examples
@@ -564,11 +585,11 @@ rand_index=function(g1,g2){
 #'
 #' @param object your Univariate object
 #'
-#' @return
+#' @return rand index between the result of kmean and y
 #' @export
 #'
-#' @examples
-kmean_rand_index=function(object){
+#' @examples kmean_rand_index_univ(Univariate_object(esoph,1))
+kmean_rand_index_univ=function(object){
   indice= object$group
 
   X=object$df[ ,object$ind.quan]
@@ -584,4 +605,11 @@ kmean_rand_index=function(object){
 
 }
 
-
+# t=Univariate_object(esoph,1)
+# print(t)
+# desc_size_effect(Univariate_object(esoph,1),3)
+# ttest_all(t)
+# explonarory_test(t)
+# silhouette_plot_univ(t)
+# silhouette_plot_univ(Univariate_object(esoph,1))
+# silhouette_ind(Univariate_object(esoph,1))
