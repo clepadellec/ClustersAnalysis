@@ -9,6 +9,7 @@ Uni : desc_prof(data,name_var_group= la variable de groupe,name_var_comp= variab
 Autres : extract_ql(data) : extraction de l'ensemble des variables quali du dataframe
 Autres : mode_var(x=une variable quali) : retourne le mode d'une variable quali
 
+
 idée : approfondir l'effet taille, rajouts des tests préalables sur les fonctions pour éviter les erreurs
 
 QUANTI/QUALI - Mélange QUANTI-QUALI/QUALI
@@ -26,4 +27,4 @@ matrix_distance(data, d): calcul la distance entre deux individus et ca renvoie 
 mean_distance(data, group): calcul la distance moyenne entre 1 individus et une classe (cette quantité est égale à la moyenne de la distance entre cet individus et des individus de cette classe). Cette fonction sert à calculer l'indice de silhouette.
 type_variable(x): déterminer le type d'une variable
 data_type(data): déterminer le type du data --- on a 5 types: qualitative/quantitative/qualitatives/quantitatives/mélange quali-quanti. 
-
+Uni : generalisation_quanti():

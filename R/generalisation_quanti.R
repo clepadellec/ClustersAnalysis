@@ -28,6 +28,7 @@ shapiro_test <- function(pop_a,pop_b){
 #'
 #' @examples
 ttest_all <- function(df,var_groupe){
+  df <- na.omit(df)
     type_var <- df %>% head %>% collect %>% lapply(class) %>% unlist
     # Repère index var quanti
     var_quanti <- c(which(type_var == "numeric" | type_var == "integer"))
@@ -69,5 +70,4 @@ ttest_all <- function(df,var_groupe){
     return(res)
 }
 
-#ttest_all(data_0,'Region')
 
