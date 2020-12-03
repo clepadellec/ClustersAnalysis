@@ -6,7 +6,8 @@
 #' @param name_ind rownames to apply
 #' @param qtsup if users want to add a quantitative features to acm (could be a number or vector of numbers)
 #' @import FactoMineR
-#' @imort factoextra
+#' @import factoextra
+#' @import corrplot
 #' @return corrplot with the contributions of features for each dimensions and a biplot to vizualize acm
 #' @export
 #'

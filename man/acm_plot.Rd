@@ -12,6 +12,8 @@ acm_plot(df, dims, name_ind = 0, qtsup = NULL)
 \item{dims}{dimensions to print}
 
 \item{name_ind}{rownames to apply}
+
+\item{qtsup}{if users want to add a quantitative features to acm (could be a number or vector of numbers)}
 }
 \value{
 corrplot with the contributions of features for each dimensions and a biplot to vizualize acm

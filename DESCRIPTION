@@ -21,5 +21,6 @@ Imports:
   factoextra,
   rdist,
   dplyr,
-  fastDummies
+  fastDummies,
+  corrplot
 
