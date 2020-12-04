@@ -8,6 +8,7 @@
 #'
 #'
 #' @examples
+#' multivariate_object(iris,5)
 multivariate_object=function(df,ind_group_class){
   # contrôle data.frame
   ok = is.data.frame(df)
@@ -47,16 +48,14 @@ multivariate_object=function(df,ind_group_class){
 }
 
 
-
-
 #' Verify the type of variables
 #'
 #' @param x a vector
 #'
 #' @return the type of x
 #'
-#'
 #' @examples
+#' type_variable(iris$Sepal.Length)
 type_variable=function(x){
   if (class(x)=='character'|length(unique(x))<7){
     type=('qualitative')
@@ -67,20 +66,15 @@ type_variable=function(x){
 }
 
 
-
-
-
-
-#' Title
+#' All type possible in the dataframe
 #'
 #' @param X dataframe or matrix
 #'
 #' @return the type of X: there are 5 possibilities: quantitative, quantitatives,
 #' qualitative, qualitatives, quantitative-qualitative
 #'
-#'
-#'
 #' @examples
+#' data_type(iris)
 data_type=function(X){
   quali_quanti=sapply(X, FUN = type_variable)
   #  quali_quanti=c()
@@ -114,10 +108,7 @@ data_type=function(X){
 }
 
 
-
-
-
-#' Title
+#' Title ...
 #'
 #' @param data a datafram
 #' @param rescale a boolean
@@ -125,7 +116,6 @@ data_type=function(X){
 #' @return data encoding with rescale or not
 #'
 #' @import fastDummies
-#'
 #'
 #' @examples
 dummy_data=function(data, rescale=FALSE){
@@ -158,12 +148,7 @@ dummy_data=function(data, rescale=FALSE){
 }
 
 
-
-
-
-
-
-#' Title
+#' Distance Matrix
 #'
 #' @param X a matrix or dataframe with explanatory variables
 #' @param d the distance measure to be used and this must be "euclidean" or "L1"
@@ -172,21 +157,15 @@ dummy_data=function(data, rescale=FALSE){
 #'
 #' @import rdist
 #'
-#'
 #' @examples
+#' matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
 matrix_distance=function(X,d){
   dist=pdist(X,d)
   return(dist)
 }
 
 
-
-
-
-
-
-
-#' Title
+#' Title ...
 #'
 #' @param X a numeric symmetric matrix containing the pairwise distance between the rows of a data frame
 #' @param y a factor such that length(X)=length(y)
@@ -195,6 +174,7 @@ matrix_distance=function(X,d){
 #'
 #'
 #' @examples
+#' ...
 mean_distance=function(X,y){
 
   m=nrow(X)
@@ -208,23 +188,17 @@ mean_distance=function(X,y){
 }
 
 
-
-
-
-
-
-
-#' Title
+#' Title ...
 #'
-#' @param object
+#' @param object your Multavariate object
 #' @param rescale
-#' @param d
+#' @param d method used
 #'
 #' @return Silhouette Coefficient of each row
 #' @export
 #'
 #' @examples
-#'
+#' ...
 silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
   X=object$df
   y=object$group
@@ -271,17 +245,17 @@ silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
 }
 
 
-
-
-
-#' Title
+#' Values ACP with 2 dimensions
+#' @param X ...
+#' @param i ...
+#' @param j ...
+#' @param rescale ...
 #'
-#' @return
+#' @return the values of ACP with 2 dimensions
 #' @import  FactoMineR
 #'
-#'
-
 #' @examples
+#' acp_2_axes(iris[,-5])
 acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
@@ -319,16 +293,12 @@ acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 }
 
 
-
-
-
-
-
-
-
-
-
-#' Title
+#' Title ...
+#' @param object your Multivariate object
+#' @param i ...
+#' @param j ...
+#' @param rescale ...
+#' @param d method used
 #'
 #' @return
 #'
@@ -337,6 +307,7 @@ acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @export
 #'
 #' @examples
+#' ...
 sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 
   X=object$df
@@ -388,12 +359,10 @@ sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 }
 
 
-
-
-#' Title
-#' @param object
-#' @param
-#' @param
+#' Title ...
+#' @param object your Multivariate object
+#' @param rescale ...
+#' @param d method used
 #'
 #' @return the silhouette plot
 #'
@@ -401,6 +370,7 @@ sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 #' @import ggplot2
 #'
 #' @examples
+#' ...
 silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
 
   X=object$df
@@ -423,17 +393,16 @@ silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
 }
 
 
-
-
-
-#' Title
+#' Title ...
 #'
-#' @param object
+#' @param object your Multivariate object
 #' @param i i-th cluster
 #' @return a dataframe with a summary of value test between the explanatory variables and and the i-th cluster
 #' @export
 #'
 #' @examples
+#' obj = multivariate_object(infert,1)
+#' test.value(obj)
 test.value=function(object, i=1){
 
   data=object$df
@@ -473,19 +442,15 @@ test.value=function(object, i=1){
 }
 
 
-
-
-
-
-#' Title
+#' Title ...
 #'
 #' @param g1 first cluster
 #' @param g2 second cluster
 #'
 #' @return Rand index measure to compare the similarity of two clustering.
-
 #'
 #' @examples
+#' ...
 rand_index_multi=function(g1,g2){
   if (length(g1)!= length(g2)){
     return("g1 and g2 must have the same length")
@@ -512,17 +477,16 @@ rand_index_multi=function(g1,g2){
 }
 
 
-
-
-#' Title
+#' Title ...
 #'
-#' @param
-#' @param
+#' @param object your Multivariate object
 #'
 #' @return rand index between the result of kmean and y
 #' @export
 #'
 #' @examples
+#' obj = multivariate_object(infert,1)
+#' kmean_rand_index_multi(obj)
 kmean_rand_index_multi=function(object){
   X=object$df
   y=object$group
@@ -536,16 +500,18 @@ kmean_rand_index_multi=function(object){
 }
 
 
-
-
-
-
-#' Title
+#' Title ...
+#' @param object your Multivariate object
+#' @param i ...
+#' @param j ...
 #'
-#' @return
+#' @return a plot about the cluster on the first two dimensions
+#' @import gpplot2
 #' @export
 #'
 #' @examples
+#' obj = multivariate_object(infert,1)
+#' kmean_clustering_plot_multi(obj)
 kmean_clustering_plot_multi=function(object,i=1,j=2){
 
   X=object$df
@@ -584,13 +550,10 @@ kmean_clustering_plot_multi=function(object,i=1,j=2){
 }
 
 
-
-
-
-#' Title
+#' Rapport Correlation Multivariate
 #'
-#' @param
-#' @param
+#' @param object your Multivariate object
+#' @param method method used
 #'
 #' @return rapport correlation
 #'
@@ -598,6 +561,8 @@ kmean_clustering_plot_multi=function(object,i=1,j=2){
 #' @export
 #'
 #' @examples
+#' obj = multivariate_object(infert,1)
+#' R2_multivariate_multi(object = obj)
 R2_multivariate_multi=function(object, method='encoding'){
 
   data=object$df
@@ -651,15 +616,9 @@ R2_multivariate_multi=function(object, method='encoding'){
 }
 
 
-
-
-
-
-
-
-#' Title
+#' Plot ACM multivariate
 #'
-#' @param
+#' @param object your Multivariate object
 #' @param dims dimensions to print
 #' @param name_ind rownames to apply
 #' @param qtsup if users want to add a quantitative features to acm (could be a number or vector of numbers)
@@ -667,10 +626,11 @@ R2_multivariate_multi=function(object, method='encoding'){
 #' @import factoextra
 #' @import corrplot
 #' @return corrplot with the contributions of features for each dimensions and a biplot to vizualize acm
-#' @export
 #'
 #' @examples
-#'
+#' CO2_bis = CO2[,1:3]
+#' obj = multivariate_object(CO2_bis,1)
+#' acm_plot_multi(obj)
 acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
   df=object$df
@@ -707,33 +667,4 @@ acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
