@@ -602,4 +602,105 @@ u_kmean_rand_index=function(object){
   return(rand)
 
 }
+#' Title
+#'
+#' @return dataframe with ACP results for 2 axes
+#' @import FactoMineR
+#' @export
+#'
+
+#' @param X a dataframe
+#'
+#' @param i first dim
+#' @param j second dim
+#' @param rescale a boolean
+#'
+#' @examples
+u_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
+
+  if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
+    return("the index must be larger than 0 and smaller than the number of variables")
+    stop()
+  }
+
+
+
+  acp=PCA(X,graph=FALSE)
+  acp.ind=acp$ind
+  acp.ind.cord=acp.ind$coord
+  df=acp.ind.cord[,c(i,j)]
+  dfbis=data.frame(df)
+  PC1=round(acp$eig[,2][i])
+  PC2=round(acp$eig[,2][j])
+  colnames(dfbis)=c(paste("Dim",i,"---",PC1,"%"), paste("Dim",j,"---",PC2,"%"))
+  return(dfbis)
+}
+
+#' Title
+#'
+#' @param object
+#' @param i
+#' @param j
+#' @param rescale
+#' @param d
+#'
+#' @return
+#'
+#' @import  ggplot2
+#' @import FactoMineR
+#' @export
+#'
+#' @examples u_sil_pca_plot(Univariate_object(iris,5))
+u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
+  indice= object$group
+
+  X=object$df[,-indice]
+
+  var_groupe <- object$name_group
+
+  y=object$df[[var_groupe]]
+  if (class(y)!="factor" & class(y)!="character"){
+    return("y must be a factor or character")
+    stop()
+  }
+
+  if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
+    return("the index must be larger than 0 and smaller than the number of variables")
+    stop()
+  }
+
+
+  if (u_data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (u_data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (u_data_type(X)=='quantitative-qualitative'|u_data_type(X)=='qualitatives'){
+    X_bis=u_dummy_data(X,rescale)
+  }
+
+  if (u_data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
+
+
+  acp=u_acp_2_axes(X_bis,i,j)
+  sil=u_silhouette_ind(object,rescale,d)
+  a=colnames(acp)[1]
+  b=colnames(acp)[2]
+  percent1=as.numeric(substr(a,11,12))
+  percent2=as.numeric(substr(b,11,12))
+  cluster=y
+  colnames(acp)=c("Dimi", "Dimj")
+  g= ggplot(acp, aes(Dimi,Dimj, color =sil, shape =cluster)) +
+    geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
+    theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
+
+  return(g)
+
+}
 
