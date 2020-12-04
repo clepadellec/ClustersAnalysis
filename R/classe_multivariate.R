@@ -55,8 +55,8 @@ multivariate_object=function(df,ind_group_class){
 #' @return the type of x
 #'
 #' @examples
-#' type_variable(iris$Sepal.Length)
-type_variable=function(x){
+#' #m_type_variable(iris$Sepal.Length)
+m_type_variable=function(x){
   if (class(x)=='character'|length(unique(x))<7){
     type=('qualitative')
   } else{
@@ -74,9 +74,9 @@ type_variable=function(x){
 #' qualitative, qualitatives, quantitative-qualitative
 #'
 #' @examples
-#' data_type(iris)
-data_type=function(X){
-  quali_quanti=sapply(X, FUN = type_variable)
+#' #m_data_type(iris)
+m_data_type=function(X){
+  quali_quanti=sapply(X, FUN = m_type_variable)
   #  quali_quanti=c()
   #  n=ncol(X)
   #  for (i in 1:n){
@@ -108,7 +108,7 @@ data_type=function(X){
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param data a datafram
 #' @param rescale a boolean
@@ -118,12 +118,12 @@ data_type=function(X){
 #' @import fastDummies
 #'
 #' @examples
-dummy_data=function(data, rescale=FALSE){
+m_dummy_data=function(data, rescale=FALSE){
 
   dataf=data
 
   col_names=colnames(data)
-  t=sapply(data, type_variable)
+  t=sapply(data, m_type_variable)
   variable_qualitative=colnames(data)[t=="qualitative"]
   variable_quantitative=colnames(data)[t=="quantitative"]
   if (length(variable_qualitative)==0){
@@ -158,14 +158,14 @@ dummy_data=function(data, rescale=FALSE){
 #' @import rdist
 #'
 #' @examples
-#' matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
-matrix_distance=function(X,d){
+#' #m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
+m_matrix_distance=function(X,d){
   dist=pdist(X,d)
   return(dist)
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param X a numeric symmetric matrix containing the pairwise distance between the rows of a data frame
 #' @param y a factor such that length(X)=length(y)
@@ -174,9 +174,8 @@ matrix_distance=function(X,d){
 #'
 #'
 #' @examples
-#' ...
-mean_distance=function(X,y){
-
+#'
+m_mean_distance=function(X,y){
   m=nrow(X)
   distance=c()
   for (i in 1:m){
@@ -188,7 +187,7 @@ mean_distance=function(X,y){
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param object your Multavariate object
 #' @param rescale
@@ -197,34 +196,38 @@ mean_distance=function(X,y){
 #' @return Silhouette Coefficient of each row
 #' @export
 #'
-#' @examples
-#' ...
-silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
+#' @examples m_silhouette_ind_multi(multivariate_object(iris,5))
+#'
+m_silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
   X=object$df
+  print(X)
+  # indice= object$group
+  # X=object$df[,-indice]
   y=object$group
 
-  if (data_type(X)=="quantitatives"){
+  if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
 
-  if (data_type(X)=="quantitative"){
+  if (m_data_type(X)=="quantitative"){
     X_bis=data.frame(X)
   }
 
-  if (data_type(X)=='quantitative-qualitative'|data_type(X)=='qualitatives'){
-    X_bis=dummy_data(X,rescale)
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
   }
 
-  if (data_type(X)=='qualitative'){
+  if (m_data_type(X)=='qualitative'){
     X_bis=dummy_cols(data.frame(X), remove_first_dummy  = F)[,-1]
   }
 
 
 
-  matrice_distance=matrix_distance(X_bis,d)
-  moyenne_distance=mean_distance(matrice_distance,y)
+  matrice_distance=m_matrix_distance(X_bis,d)
+  moyenne_distance=m_mean_distance(matrice_distance,y)
   sil=c()
   m=nrow(moyenne_distance)
+  print(m)
   if (nlevels(y)==1){
     sil=rep(-1,m)
   } else{
@@ -246,17 +249,17 @@ silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
 
 
 #' Values ACP with 2 dimensions
-#' @param X ...
-#' @param i ...
-#' @param j ...
-#' @param rescale ...
+#' @param X
+#' @param i
+#' @param j
+#' @param rescale
 #'
 #' @return the values of ACP with 2 dimensions
 #' @import  FactoMineR
 #'
 #' @examples
-#' acp_2_axes(iris[,-5])
-acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
+#' #m_acp_2_axes(iris[,-5])
+m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
@@ -293,11 +296,11 @@ acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 }
 
 
-#' Title ...
+#' Title
 #' @param object your Multivariate object
-#' @param i ...
-#' @param j ...
-#' @param rescale ...
+#' @param i
+#' @param j
+#' @param rescale
 #' @param d method used
 #'
 #' @return
@@ -306,9 +309,9 @@ acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @import FactoMineR
 #' @export
 #'
-#' @examples
-#' ...
-sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
+#' @examples m_sil_pca_plot_multi(multivariate_object(iris,5))
+#'
+m_sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 
   X=object$df
   y=object$group
@@ -324,26 +327,26 @@ sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
   }
 
 
-  if (data_type(X)=="quantitatives"){
+  if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
 
-  if (data_type(X)=="quantitative"){
+  if (m_data_type(X)=="quantitative"){
     X_bis=data.frame(X)
   }
 
-  if (data_type(X)=='quantitative-qualitative'|data_type(X)=='qualitatives'){
-    X_bis=dummy_data(X,rescale)
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
   }
 
-  if (data_type(X)=='qualitative'){
+  if (m_data_type(X)=='qualitative'){
     X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
   }
 
 
 
   acp=acp_2_axes(X_bis,i,j)
-  sil=silhouette_ind_multi(object,rescale,d)
+  sil=m_silhouette_ind_multi(object,rescale,d)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
   percent1=as.numeric(substr(a,11,12))
@@ -359,9 +362,9 @@ sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 }
 
 
-#' Title ...
+#' Title
 #' @param object your Multivariate object
-#' @param rescale ...
+#' @param rescale
 #' @param d method used
 #'
 #' @return the silhouette plot
@@ -369,14 +372,14 @@ sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 #' @export
 #' @import ggplot2
 #'
-#' @examples
-#' ...
-silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
+#' @examples m_silhouette_plot_multi(multivariate_object(iris,5))
+#'
+m_silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
 
   X=object$df
   y=object$group
 
-  sil=silhouette_ind_multi(object,rescale,d)
+  sil=m_silhouette_ind_multi(object,rescale,d)
   df=data.frame("silhouette"=sil, "cluster"=y)
 
   # data frame contains the mean silhouette coefficient of clusters
@@ -393,17 +396,15 @@ silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param object your Multivariate object
 #' @param i i-th cluster
 #' @return a dataframe with a summary of value test between the explanatory variables and and the i-th cluster
 #' @export
 #'
-#' @examples
-#' obj = multivariate_object(infert,1)
-#' test.value(obj)
-test.value=function(object, i=1){
+#' @examples m_test.value(multivariate_object(infert,1))
+m_test.value=function(object, i=1){
 
   data=object$df
   g=object$group
@@ -442,7 +443,7 @@ test.value=function(object, i=1){
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param g1 first cluster
 #' @param g2 second cluster
@@ -450,8 +451,8 @@ test.value=function(object, i=1){
 #' @return Rand index measure to compare the similarity of two clustering.
 #'
 #' @examples
-#' ...
-rand_index_multi=function(g1,g2){
+#'
+m_rand_index_multi=function(g1,g2){
   if (length(g1)!= length(g2)){
     return("g1 and g2 must have the same length")
     stop()
@@ -477,42 +478,40 @@ rand_index_multi=function(g1,g2){
 }
 
 
-#' Title ...
+#' Title
 #'
 #' @param object your Multivariate object
 #'
 #' @return rand index between the result of kmean and y
 #' @export
 #'
-#' @examples
-#' obj = multivariate_object(infert,1)
-#' kmean_rand_index_multi(obj)
-kmean_rand_index_multi=function(object){
+#' @examples m_kmean_rand_index_multi(multivariate_object(infert,1))
+#'
+m_kmean_rand_index_multi=function(object){
   X=object$df
   y=object$group
   n=length(unique(y))
   X_cr=scale(X,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
-  rand=rand_index_multi(n_means$cluster,y)
+  rand=m_rand_index_multi(n_means$cluster,y)
   return(rand)
 
 }
 
 
-#' Title ...
+#' Title
 #' @param object your Multivariate object
-#' @param i ...
-#' @param j ...
+#' @param i
+#' @param j
 #'
 #' @return a plot about the cluster on the first two dimensions
-#' @import gpplot2
+#' @import ggplot2
 #' @export
 #'
-#' @examples
-#' obj = multivariate_object(infert,1)
-#' kmean_clustering_plot_multi(obj)
-kmean_clustering_plot_multi=function(object,i=1,j=2){
+#' @examples m_kmean_clustering_plot_multi(multivariate_object(infert,1))
+#'
+m_kmean_clustering_plot_multi=function(object,i=1,j=2){
 
   X=object$df
   y=object$group
@@ -560,17 +559,15 @@ kmean_clustering_plot_multi=function(object,i=1,j=2){
 #' @import FactoMineR
 #' @export
 #'
-#' @examples
-#' obj = multivariate_object(infert,1)
-#' R2_multivariate_multi(object = obj)
-R2_multivariate_multi=function(object, method='encoding'){
+#' @examples m_R2_multivariate_multi(multivariate_object(infert,1))
+m_R2_multivariate_multi=function(object, method='encoding'){
 
   data=object$df
   g=object$group
 
   if (data_type(data)=='qualitatives'){
     if (method=='encoding'){
-      data_bis=dummy_data(data)
+      data_bis=m_dummy_data(data)
     } else{
       p=ncol(data)
       M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
@@ -627,11 +624,8 @@ R2_multivariate_multi=function(object, method='encoding'){
 #' @import corrplot
 #' @return corrplot with the contributions of features for each dimensions and a biplot to vizualize acm
 #'
-#' @examples
-#' CO2_bis = CO2[,1:3]
-#' obj = multivariate_object(CO2_bis,1)
-#' acm_plot_multi(obj)
-acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
+#' @examples #m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
+m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
   df=object$df
 

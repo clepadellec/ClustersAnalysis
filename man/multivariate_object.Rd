@@ -17,3 +17,6 @@ an object which is going to be use to analyse clustering
 \description{
 Title
 }
+\examples{
+multivariate_object(iris,5)
+}
