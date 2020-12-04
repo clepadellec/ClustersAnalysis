@@ -9,10 +9,10 @@ u_afc_plot(object, ind_var_exp)
 \arguments{
 \item{object}{your Univariate object}
 
-\item{ind_var_exp}{the indice of the explonatory variable (only qualitative)}
+\item{ind_var_exp}{the indice of the explanatory variable (only qualitative)}
 }
 \value{
-a factorial projection between group variable and explonatory variable
+a factorial projection between group variable and explanatory variable
 }
 \description{
 Title

@@ -9,10 +9,10 @@ u_desc_size_effect(object, ind_var_exp)
 \arguments{
 \item{object}{your Univariate object}
 
-\item{ind_var_exp}{the qualitative explonatory variable}
+\item{ind_var_exp}{the qualitative explanatory variable}
 }
 \value{
-the vtest value for each class(group variable)/modality(explonatory variable)
+the vtest value for each class(group variable)/modality(explanatory variable)
 }
 \description{
 Title

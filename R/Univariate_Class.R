@@ -42,9 +42,9 @@ Univariate_object <- function(df,ind_group_class){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp the qualitative explonatory variable
+#' @param ind_var_exp the qualitative explanatory variable
 #'
-#' @return the vtest value for each class(group variable)/modality(explonatory variable)
+#' @return the vtest value for each class(group variable)/modality(explanatory variable)
 #' @export
 #'
 #' @examples u_desc_size_effect((Univariate_object(esoph,1)),3)
@@ -118,9 +118,9 @@ u_chisq_test_all <- function(object){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp the indice of the explonatory variable (only qualitative)
+#' @param ind_var_exp the indice of the explanatory variable (only qualitative)
 #'
-#' @return a factorial projection between group variable and explonatory variable
+#' @return a factorial projection between group variable and explanatory variable
 #' @import FactoMineR
 #' @import factoextra
 #' @export
@@ -142,9 +142,9 @@ u_afc_plot <- function(object,ind_var_exp){
 #' Title
 #'
 #' @param object your Univariate object
-#' @param ind_var_exp the indice of the explonatory variable (only qualitative)
+#' @param ind_var_exp the indice of the explanatory variable (only qualitative)
 #'
-#' @return contingency table between group and explonatory variables and the rows and columns profils
+#' @return contingency table between group and explanatory variables and the rows and columns profils
 #' @import questionr
 #' @export
 #'
@@ -163,6 +163,33 @@ u_desc_profils <- function(object,ind_var_exp){
   print(lprop(contingence, digits=1))
   print("Profils colonnes : ")
   print(cprop(contingence, digits=2))
+}
+
+#' Title
+#'
+#' @param object your univariate object
+#' @param ind_var_exp the indice of your explanatory variable(only qualitative)
+#'
+#' @return a mosaic plot which is the distribution of your explanatory variable by class
+#'
+#' @import ggplot2
+#' @import ggmosaic
+#' @importFrom plotly ggplotly
+#'
+#' @export
+#'
+#' @examples #u_plot_size_effect((Univariate_object(infert,1)),2)
+u_plot_size_effect<- function(object,ind_var_exp){
+  var_groupe <- object$name_group
+  x=object$df[,ind_var_exp]
+  y=object$df[[var_groupe]]
+  df=data.frame("explanatory"=x, "cluster"=y)
+  p <- ggplot(data = df) +
+    geom_mosaic(aes(x = product(explanatory), fill=cluster), na.rm=TRUE,show.legend=TRUE ) +
+    labs(x = colnames(object$df[2]),y=colnames(object$df[1]), title='Distribution between cluster and explanatory')+
+    theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+
+  #ggplotly(p)
 }
 
 #' Title
@@ -187,7 +214,7 @@ u_shapiro_test <- function(pop_a,pop_b){
 #'
 #' @param object your Univariate object
 #'
-#' @return a table with the combination of each group X explonatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
+#' @return a table with the combination of each group X explanatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
 #' @export
 #'
 #' @examples u_ttest_all(Univariate_object(esoph,1))
@@ -236,7 +263,7 @@ u_ttest_all <- function(object){
 #' @param object your Univariate object
 #' @param i the number of your target group
 #'
-#' @return the explonatory variable which caracterize the most the class of your group variable you choose
+#' @return the explanatory variable which caracterize the most the class of your group variable you choose
 #' @export
 #'
 #' @examples u_explonarory_test(Univariate_object(esoph,1))
@@ -482,6 +509,7 @@ u_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 #'
 #' @return the silhouette plot
 #' @import ggplot2
+#' @importFrom plotly ggplotly
 #' @export
 #'
 #' @examples u_silhouette_plot(Univariate_object(iris,5))
@@ -500,7 +528,7 @@ u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
-  return(g)
+  #ggplotly(g)
 
 }
 
@@ -647,6 +675,7 @@ u_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @return
 #'
 #' @import  ggplot2
+#' @importFrom plotly ggplotly
 #' @import FactoMineR
 #' @export
 #'
@@ -700,7 +729,8 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(g)
+  #ggplotly(g)
 
 }
 
+u_plot_size_effect((Univariate_object(infert,1)),2)

@@ -15,6 +15,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
   ggplot2,
+  ggmosaic,
   questionr,
   ggcorrplot,
   FactoMineR,
@@ -22,5 +23,5 @@ Imports:
   rdist,
   dplyr,
   fastDummies,
-  corrplot
-
+  corrplot,
+  plotly

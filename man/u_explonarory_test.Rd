@@ -12,7 +12,7 @@ u_explonarory_test(object, i = 1)
 \item{i}{the number of your target group}
 }
 \value{
-the explonatory variable which caracterize the most the class of your group variable you choose
+the explanatory variable which caracterize the most the class of your group variable you choose
 }
 \description{
 Title

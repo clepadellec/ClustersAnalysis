@@ -10,7 +10,7 @@ u_ttest_all(object)
 \item{object}{your Univariate object}
 }
 \value{
-a table with the combination of each group X explonatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
+a table with the combination of each group X explanatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
 }
 \description{
 Title

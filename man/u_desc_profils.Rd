@@ -9,10 +9,10 @@ u_desc_profils(object, ind_var_exp)
 \arguments{
 \item{object}{your Univariate object}
 
-\item{ind_var_exp}{the indice of the explonatory variable (only qualitative)}
+\item{ind_var_exp}{the indice of the explanatory variable (only qualitative)}
 }
 \value{
-contingency table between group and explonatory variables and the rows and columns profils
+contingency table between group and explanatory variables and the rows and columns profils
 }
 \description{
 Title
