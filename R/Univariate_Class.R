@@ -190,7 +190,7 @@ u_plot_size_effect<- function(object,ind_var_exp){
     labs(x = colnames(object$df[2]),y=colnames(object$df[1]), title='Distribution between cluster and explanatory')+
     theme(axis.text.x = element_blank(), axis.text.y = element_blank())
 
-  return(ggplotly(p))
+  return(p)
 }
 
 #' Title
@@ -529,7 +529,7 @@ u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
- return(ggplotly(g))
+ return(g)
 
 }
 
@@ -730,7 +730,7 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(ggplotly(g))
+  return(g)
 
 }
 
