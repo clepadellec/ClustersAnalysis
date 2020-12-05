@@ -407,8 +407,8 @@ m_silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
 #' @return a dataframe with a summary of value test between the explanatory variables and and the i-th cluster
 #' @export
 #'
-#' @examples m_test.value(multivariate_object(infert,1))
-m_test.value=function(object, i=1){
+#' @examples m_test_value(multivariate_object(infert,1))
+m_test_value=function(object, i=1){
 
   data=object$df
   g=object$group

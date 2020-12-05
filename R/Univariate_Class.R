@@ -735,4 +735,4 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 }
 
 #u_sil_pca_plot(Univariate_object(iris,5))
-#ggplotly(u_plot_size_effect((Univariate_object(infert,1)),2))
+ggplotly(u_plot_size_effect((Univariate_object(infert,1)),2))
