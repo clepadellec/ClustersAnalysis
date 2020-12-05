@@ -57,7 +57,9 @@ library(ClustersAnalysis)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 ```{r}
-ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
+#ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
+
+ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5))
 
 ```
 
