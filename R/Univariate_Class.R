@@ -172,9 +172,10 @@ u_desc_profils <- function(object,ind_var_exp){
 #'
 #' @return a mosaic plot which is the distribution of your explanatory variable by class
 #'
+#'
+#' @rawNamespace import(plotly, except = last_plot)
 #' @import ggplot2
 #' @import ggmosaic
-#' @importFrom plotly ggplotly
 #'
 #' @export
 #'
@@ -185,11 +186,11 @@ u_plot_size_effect<- function(object,ind_var_exp){
   y=object$df[[var_groupe]]
   df=data.frame("explanatory"=x, "cluster"=y)
   p <- ggplot(data = df) +
-    geom_mosaic(aes(x = product(explanatory), fill=cluster), na.rm=TRUE,show.legend=TRUE ) +
+    geom_mosaic(aes(x = product(explanatory), fill=cluster), na.rm=TRUE) +
     labs(x = colnames(object$df[2]),y=colnames(object$df[1]), title='Distribution between cluster and explanatory')+
     theme(axis.text.x = element_blank(), axis.text.y = element_blank())
 
-  #ggplotly(p)
+  ggplotly(p)
 }
 
 #' Title
@@ -508,8 +509,8 @@ u_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 #' @param d the distance measure to be used and this must be "euclidean" or "L1"
 #'
 #' @return the silhouette plot
+#' @rawNamespace import(plotly, except = last_plot)
 #' @import ggplot2
-#' @importFrom plotly ggplotly
 #' @export
 #'
 #' @examples u_silhouette_plot(Univariate_object(iris,5))
@@ -528,7 +529,7 @@ u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
-  #ggplotly(g)
+ ggplotly(g)
 
 }
 
@@ -673,9 +674,9 @@ u_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @param d
 #'
 #' @return
+#' @rawNamespace import(plotly, except = last_plot)
+#' @import ggplot2
 #'
-#' @import  ggplot2
-#' @importFrom plotly ggplotly
 #' @import FactoMineR
 #' @export
 #'
@@ -729,8 +730,9 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  #ggplotly(g)
+  ggplotly(g)
 
 }
 
-u_plot_size_effect((Univariate_object(infert,1)),2)
+#u_sil_pca_plot(Univariate_object(iris,5))
+#ggplotly(u_plot_size_effect((Univariate_object(infert,1)),2))
