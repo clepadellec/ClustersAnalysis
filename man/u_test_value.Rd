@@ -17,6 +17,3 @@ the explanatory variable which caracterize the most the class of your group vari
 \description{
 Title
 }
-\examples{
-u_test_value(Univariate_object(iris[,c(1,5)],2))
-}

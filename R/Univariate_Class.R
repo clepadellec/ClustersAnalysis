@@ -190,7 +190,7 @@ u_plot_size_effect<- function(object,ind_var_exp){
     labs(x = colnames(object$df[2]),y=colnames(object$df[1]), title='Distribution between cluster and explanatory')+
     theme(axis.text.x = element_blank(), axis.text.y = element_blank())
 
-  return(p)
+  return(ggplotly(p))
 }
 
 #' Title
@@ -267,7 +267,7 @@ u_ttest_all <- function(object){
 #' @return the explanatory variable which caracterize the most the class of your group variable you choose
 #' @export
 #'
-#' @examples u_test_value(Univariate_object(iris[,c(1,5)],2))
+#' @examples
 u_test_value=function(object,i=1){
   var_groupe <- object$name_group
   data=data.frame(object$df[ ,object$ind.quan])
@@ -529,7 +529,7 @@ u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
- return(g)
+ return(ggplotly(g))
 
 }
 
@@ -730,7 +730,7 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(g)
+  return(ggplotly(g))
 
 }
 
