@@ -167,6 +167,33 @@ u_desc_profils <- function(object,ind_var_exp){
 
 #' Title
 #'
+#' @param explanatory your expl
+#' @param cluster
+#'
+#' @return
+#' @export
+#'
+#' @examples
+u_Mosaic_plot <- function(explanatory, cluster){
+  levVar1 <- length(levels(explanatory))
+  levVar2 <- length(levels(cluster))
+
+  jointTable <- prop.table(table(explanatory, cluster))
+  data <- as.data.frame(jointTable)
+  data$marginVar1 <- prop.table(table(explanatory))
+  data$Clusters <- data$Freq / data$marginVar1
+  data$Explanatory <- c(0, cumsum(data$marginVar1)[1:levVar1 -1]) +
+    data$marginVar1 / 2
+
+  g<- ggplot(data, aes(Explanatory, Clusters)) +
+    geom_bar(stat = "identity", aes(width = marginVar1, fill = cluster), col = "Grey") +
+    geom_text(aes(label = as.character(explanatory), x = Explanatory, y = 1.1))
+
+  return(g)
+}
+
+#' Title
+#'
 #' @param object your univariate object
 #' @param ind_var_exp the indice of your explanatory variable(only qualitative)
 #'
@@ -174,21 +201,18 @@ u_desc_profils <- function(object,ind_var_exp){
 #'
 #'
 #' @rawNamespace import(plotly, except = last_plot)
-#' @import ggplot2
-#' @import ggmosaic
 #'
+#' @import ggplot2
 #' @export
 #'
-#' @examples #u_plot_size_effect((Univariate_object(infert,1)),2)
-u_plot_size_effect<- function(object,ind_var_exp){
+#' @examples u_plot_size_effect((Univariate_object(esoph,1)),2)
+u_plot_size_effect<- function(object,name_var_exp){
   var_groupe <- object$name_group
-  x=object$df[,ind_var_exp]
+  x=object$df[[name_var_exp]]
   y=object$df[[var_groupe]]
+
   df=data.frame("explanatory"=x, "cluster"=y)
-  p <- ggplot(data = df) +
-    geom_mosaic(aes(x = product(explanatory), fill=cluster), na.rm=TRUE) +
-    labs(x = colnames(object$df[2]),y=colnames(object$df[1]), title='Distribution between cluster and explanatory')+
-    theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+  p <- u_Mosaic_plot(df$explanatory,df$cluster)
 
   return(ggplotly(p))
 }
@@ -733,5 +757,7 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
   return(ggplotly(g))
 
 }
+
+#u_plot_size_effect((Univariate_object(esoph,1)),2)
 
 

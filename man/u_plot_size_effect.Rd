@@ -4,7 +4,7 @@
 \alias{u_plot_size_effect}
 \title{Title}
 \usage{
-u_plot_size_effect(object, ind_var_exp)
+u_plot_size_effect(object, name_var_exp)
 }
 \arguments{
 \item{object}{your univariate object}
@@ -18,5 +18,5 @@ a mosaic plot which is the distribution of your explanatory variable by class
 Title
 }
 \examples{
-#u_plot_size_effect((Univariate_object(infert,1)),2)
+u_plot_size_effect((Univariate_object(esoph,1)),2)
 }

@@ -24,4 +24,5 @@ Imports:
   dplyr,
   fastDummies,
   corrplot,
-  plotly
+  plotly,
+  sqldf
