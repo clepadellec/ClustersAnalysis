@@ -569,7 +569,7 @@ m_R2_multivariate_multi=function(object, method='encoding'){
   data=object$df
   g=object$group
 
-  if (data_type(data)=='qualitatives'){
+  if (data_type(data)=='qualitatives'| data_type(data)=='qualitative-quantitative'){
     if (method=='encoding'){
       data_bis=m_dummy_data(data)
     } else{
@@ -666,4 +666,119 @@ m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
 
 }
+
+
+
+
+#' Indice de Davies-Boulin
+#'
+#' @param object your Multivariate object
+#' @param
+#'
+#' @return Indice de Davies-Bouldin
+#'
+#' @import FactoMineR
+#' @export
+#'
+#' @examples #m_R2_multivariate_multi(multivariate_object(infert,1))
+m_DB_index_multi=function(object, method='encoding'){
+
+  # prétraitement le data
+
+  data=object$df
+  g=object$group
+
+  if (data_type(data)=='qualitatives' | data_type(data)=='qualitative-quantitative'){
+    if (method=='encoding'){
+      data_bis=m_dummy_data(data)
+    } else{
+      p=ncol(data)
+      M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
+      n_acm=M-p
+      ACM=MCA(data, ncp = n_acm, graph = FALSE)
+      data_bis=ACM$ind$coord
+    }
+  } else{
+    data_bis=data
+  }
+
+
+
+
+  G=apply(data_bis, MARGIN = 2, FUN = mean)
+  n_g=tapply(data_bis[,1],g,FUN = length)
+  n_G=length(unique(g))
+  columns=ncol(data_bis)
+  row=nrow(data_bis)
+  barycentre=c()
+  for (i in 1:columns){
+    barycentre=rbind(barycentre,tapply(data_bis[,i], g, FUN = mean))
+  }
+
+
+  nom_cluster=colnames(barycentre)
+  # calcul distance intra-classe
+  intra_DB=c()
+
+  for (nom in nom_cluster){
+    df_dataframe=data_bis[g==nom,]
+    len_df_dataframe=nrow(df_dataframe)
+    S=1/len_df_dataframe* sum(apply(df_dataframe,MARGIN = 1,FUN = function(x){return(sum((x-as.numeric(barycentre[,nom]))^2))}))
+
+    intra_DB=c(intra_DB,S)
+  }
+  intra_distance_DB=data.frame(intra_DB)
+  colnames(intra_distance_DB)="Indice de Davies Bouldin"
+  rownames(intra_distance_DB)=nom_cluster
+
+  # calcul distance entre des barycentres
+  dist=pdist(t(barycentre))
+
+
+  # calcul de l'indice DB
+  DB=c()
+
+  for (i in 1:n_G){
+    s=(intra_distance_DB[-i,]+intra_distance_DB[i,])/dist[i,-i]
+    DB=c(DB,max(s))
+  }
+
+  indice_DB_final=data.frame(DB)
+  colnames(indice_DB_final)='Indice de Davies Bouldin'
+  rownames(indice_DB_final)=nom_cluster
+  indice_DB_final
+
+
+  return(indice_DB_final)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
