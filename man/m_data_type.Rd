@@ -17,5 +17,5 @@ qualitative, qualitatives, quantitative-qualitative
 All type possible in the dataframe
 }
 \examples{
-#m_data_type(iris)
+m_data_type(iris)
 }

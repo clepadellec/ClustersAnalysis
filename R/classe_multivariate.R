@@ -53,9 +53,10 @@ multivariate_object=function(df,ind_group_class){
 #' @param x a vector
 #'
 #' @return the type of x
+#' @export
 #'
 #' @examples
-#' #m_type_variable(iris$Sepal.Length)
+#' m_type_variable(iris$Sepal.Length)
 m_type_variable=function(x){
   if (class(x)=='character'|length(unique(x))<7){
     type=('qualitative')
@@ -73,8 +74,9 @@ m_type_variable=function(x){
 #' @return the type of X: there are 5 possibilities: quantitative, quantitatives,
 #' qualitative, qualitatives, quantitative-qualitative
 #'
+#' @export
 #' @examples
-#' #m_data_type(iris)
+#' m_data_type(iris)
 m_data_type=function(X){
   quali_quanti=sapply(X, FUN = m_type_variable)
   #  quali_quanti=c()
@@ -156,9 +158,10 @@ m_dummy_data=function(data, rescale=FALSE){
 #' @return the distance matrix computed by using the euclidean distance or L1 distance between the rows of X.
 #'
 #' @import rdist
+#' @export
 #'
 #' @examples
-#' #m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
+#' m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
 m_matrix_distance=function(X,d){
   dist=pdist(X,d)
   return(dist)
@@ -171,9 +174,9 @@ m_matrix_distance=function(X,d){
 #' @param y a factor such that length(X)=length(y)
 #'
 #' @return a data frame containing the average distance of each row to all observations of each cluster C
+#' @export
 #'
-#'
-#' @examples
+#' @examples  m_mean_distance(m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean"), iris[,'Species'])
 #'
 m_mean_distance=function(X,y){
   m=nrow(X)
@@ -256,9 +259,10 @@ m_silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
 #'
 #' @return the values of ACP with 2 dimensions
 #' @import  FactoMineR
+#' @export
 #'
 #' @examples
-#' #m_acp_2_axes(iris[,-5])
+#' m_acp_2_axes(iris[,-5])
 m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
@@ -623,8 +627,9 @@ m_R2_multivariate_multi=function(object, method='encoding'){
 #' @import factoextra
 #' @import corrplot
 #' @return corrplot with the contributions of features for each dimensions and a biplot to vizualize acm
+#' @export
 #'
-#' @examples #m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
+#' @examples m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
 m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
   df=object$df

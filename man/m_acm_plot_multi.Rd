@@ -22,5 +22,5 @@ corrplot with the contributions of features for each dimensions and a biplot to 
 Plot ACM multivariate
 }
 \examples{
-#m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
+m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
 }

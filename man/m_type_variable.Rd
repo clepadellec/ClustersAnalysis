@@ -16,5 +16,5 @@ the type of x
 Verify the type of variables
 }
 \examples{
-#m_type_variable(iris$Sepal.Length)
+m_type_variable(iris$Sepal.Length)
 }

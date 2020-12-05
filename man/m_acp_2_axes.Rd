@@ -16,5 +16,5 @@ the values of ACP with 2 dimensions
 Values ACP with 2 dimensions
 }
 \examples{
-#m_acp_2_axes(iris[,-5])
+m_acp_2_axes(iris[,-5])
 }

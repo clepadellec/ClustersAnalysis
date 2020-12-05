@@ -18,5 +18,5 @@ the distance matrix computed by using the euclidean distance or L1 distance betw
 Distance Matrix
 }
 \examples{
-#m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
+m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
 }

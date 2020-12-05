@@ -18,5 +18,6 @@ a data frame containing the average distance of each row to all observations of 
 Title
 }
 \examples{
+ m_mean_distance(m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean"), iris[,'Species'])
 
 }
