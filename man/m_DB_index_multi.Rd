@@ -16,5 +16,5 @@ Indice de Davies-Bouldin
 Indice de Davies-Boulin
 }
 \examples{
-#m_R2_multivariate_multi(multivariate_object(infert,1))
+m_DB_index_multi(multivariate_object(infert,1))
 }

@@ -482,6 +482,59 @@ m_rand_index_multi=function(g1,g2){
 }
 
 
+
+
+
+
+
+#' Title
+#'
+#' @param g1 first cluster
+#' @param g2 second cluster
+#'
+#' @return ajusted Rand index measure to compare the similarity of two clustering.
+#' @export
+#'
+#' @examples
+#'
+m_rand_ajusted_multi=function(g1,g2){
+  if (length(g1)!= length(g2)){
+    return("g1 and g2 must have the same length")
+    stop()
+  }
+  a=0
+  b=0
+  c=0
+  d=0
+  n=length(g1)
+  for (i in 1:(n-1)){
+    for (j in (i+1):n){
+      if ((g1[i]==g1[j]) & (g2[i]==g2[j])){
+        a=a+1
+      }
+      if ((g1[i]!=g1[j]) & (g2[i]!=g2[j])){
+        b=b+1
+      }
+      if ((g1[i]==g1[j]) & (g2[i]!=g2[j])){
+        c=c+1
+      }
+      if ((g1[i]!=g1[j]) & (g2[i]==g2[j])){
+        c=c+1
+      }
+    }
+  }
+  rand1=a-(a+c)*(a+d)/(a+b+c+d)
+  rand2=1/2*(2*a+c+d)-(a+c)*(a+d)/(a+b+c+d)
+  rand=rand1/rand2
+
+  return(rand)
+}
+
+
+
+
+
+
 #' Title
 #'
 #' @param object your Multivariate object
@@ -502,6 +555,36 @@ m_kmean_rand_index_multi=function(object){
   return(rand)
 
 }
+
+
+
+
+
+
+#' Title
+#'
+#' @param object your Multivariate object
+#'
+#' @return ajusted rand index between the result of kmean and y
+#' @export
+#'
+#' @examples m_kmean_rand_ajusted_multi(multivariate_object(infert,1))
+#'
+m_kmean_rand_ajusted_multi=function(object){
+  X=object$df
+  y=object$group
+  n=length(unique(y))
+  X_cr=scale(X,center = T,scale = T)
+  n_means=kmeans(X_cr,centers = n,nstart = 5)
+
+  rand=m_rand_ajusted_multi(n_means$cluster,y)
+  return(rand)
+
+}
+
+
+
+
 
 
 #' Title
@@ -680,7 +763,7 @@ m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 #' @import FactoMineR
 #' @export
 #'
-#' @examples #m_R2_multivariate_multi(multivariate_object(infert,1))
+#' @examples m_DB_index_multi(multivariate_object(infert,1))
 m_DB_index_multi=function(object, method='encoding'){
 
   # prétraitement le data
@@ -751,6 +834,12 @@ m_DB_index_multi=function(object, method='encoding'){
 
   return(indice_DB_final)
 }
+
+
+
+
+
+
 
 
 
