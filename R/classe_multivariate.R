@@ -199,9 +199,9 @@ m_mean_distance=function(X,y){
 #' @return Silhouette Coefficient of each row
 #' @export
 #'
-#' @examples m_silhouette_ind_multi(multivariate_object(iris,5))
+#' @examples m_silhouette_ind(multivariate_object(iris,5))
 #'
-m_silhouette_ind_multi=function(object,rescale=FALSE,d='euclidean'){
+m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
   X=object$df
   print(X)
   # indice= object$group
@@ -308,14 +308,14 @@ m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @param d method used
 #'
 #' @return
-#'
+#' @rawNamespace import(plotly, except = last_plot)
 #' @import  ggplot2
 #' @import FactoMineR
 #' @export
 #'
-#' @examples m_sil_pca_plot_multi(multivariate_object(iris,5))
+#' @examples m_sil_pca_plot(multivariate_object(iris,5))
 #'
-m_sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
+m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=TRUE){
 
   X=object$df
   y=object$group
@@ -350,7 +350,7 @@ m_sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 
 
   acp=acp_2_axes(X_bis,i,j)
-  sil=m_silhouette_ind_multi(object,rescale,d)
+  sil=m_silhouette_ind(object,rescale,d)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
   percent1=as.numeric(substr(a,11,12))
@@ -361,7 +361,7 @@ m_sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(g)
+  if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
 
@@ -372,18 +372,18 @@ m_sil_pca_plot_multi=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
 #' @param d method used
 #'
 #' @return the silhouette plot
-#'
+#' @rawNamespace import(plotly, except = last_plot)
 #' @export
 #' @import ggplot2
 #'
-#' @examples m_silhouette_plot_multi(multivariate_object(iris,5))
+#' @examples m_silhouette_plot(multivariate_object(iris,5))
 #'
-m_silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
+m_silhouette_plot=function(object, rescale=FALSE, d="euclidean", interact=TRUE){
 
   X=object$df
   y=object$group
 
-  sil=m_silhouette_ind_multi(object,rescale,d)
+  sil=m_silhouette_ind(object,rescale,d)
   df=data.frame("silhouette"=sil, "cluster"=y)
 
   # data frame contains the mean silhouette coefficient of clusters
@@ -395,7 +395,7 @@ m_silhouette_plot_multi=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
-  return(g)
+  if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
 
@@ -456,7 +456,7 @@ m_test.value=function(object, i=1){
 #'
 #' @examples
 #'
-m_rand_index_multi=function(g1,g2){
+m_rand_index=function(g1,g2){
   if (length(g1)!= length(g2)){
     return("g1 and g2 must have the same length")
     stop()
@@ -497,7 +497,7 @@ m_rand_index_multi=function(g1,g2){
 #'
 #' @examples
 #'
-m_rand_ajusted_multi=function(g1,g2){
+m_rand_ajusted=function(g1,g2){
   if (length(g1)!= length(g2)){
     return("g1 and g2 must have the same length")
     stop()
@@ -542,16 +542,16 @@ m_rand_ajusted_multi=function(g1,g2){
 #' @return rand index between the result of kmean and y
 #' @export
 #'
-#' @examples m_kmean_rand_index_multi(multivariate_object(infert,1))
+#' @examples m_kmean_rand_index(multivariate_object(infert,1))
 #'
-m_kmean_rand_index_multi=function(object){
+m_kmean_rand_index=function(object){
   X=object$df
   y=object$group
   n=length(unique(y))
   X_cr=scale(X,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
-  rand=m_rand_index_multi(n_means$cluster,y)
+  rand=m_rand_index(n_means$cluster,y)
   return(rand)
 
 }
@@ -568,16 +568,16 @@ m_kmean_rand_index_multi=function(object){
 #' @return ajusted rand index between the result of kmean and y
 #' @export
 #'
-#' @examples m_kmean_rand_ajusted_multi(multivariate_object(infert,1))
+#' @examples m_kmean_rand_ajusted(multivariate_object(infert,1))
 #'
-m_kmean_rand_ajusted_multi=function(object){
+m_kmean_rand_ajusted=function(object){
   X=object$df
   y=object$group
   n=length(unique(y))
   X_cr=scale(X,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
-  rand=m_rand_ajusted_multi(n_means$cluster,y)
+  rand=m_rand_ajusted(n_means$cluster,y)
   return(rand)
 
 }
@@ -593,12 +593,13 @@ m_kmean_rand_ajusted_multi=function(object){
 #' @param j
 #'
 #' @return a plot about the cluster on the first two dimensions
+#' @rawNamespace import(plotly, except = last_plot)
 #' @import ggplot2
 #' @export
 #'
-#' @examples m_kmean_clustering_plot_multi(multivariate_object(infert,1))
+#' @examples m_kmean_clustering_plot(multivariate_object(infert,1))
 #'
-m_kmean_clustering_plot_multi=function(object,i=1,j=2){
+m_kmean_clustering_plot=function(object,i=1,j=2, interact=TRUE){
 
   X=object$df
   y=object$group
@@ -631,7 +632,7 @@ m_kmean_clustering_plot_multi=function(object,i=1,j=2){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(g)
+  if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
 
@@ -646,8 +647,8 @@ m_kmean_clustering_plot_multi=function(object,i=1,j=2){
 #' @import FactoMineR
 #' @export
 #'
-#' @examples m_R2_multivariate_multi(multivariate_object(infert,1))
-m_R2_multivariate_multi=function(object, method='encoding'){
+#' @examples m_R2_multivariate(multivariate_object(infert,1))
+m_R2_multivariate=function(object, method='encoding'){
 
   data=object$df
   g=object$group
@@ -712,8 +713,8 @@ m_R2_multivariate_multi=function(object, method='encoding'){
 #' @return corrplot with the contributions of features for each dimensions and a biplot to vizualize acm
 #' @export
 #'
-#' @examples m_acm_plot_multi(multivariate_object(CO2[,1:3],1))
-m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
+#' @examples m_acm_plot(multivariate_object(CO2[,1:3],1))
+m_acm_plot <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
   df=object$df
 
@@ -763,8 +764,8 @@ m_acm_plot_multi <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 #' @import FactoMineR
 #' @export
 #'
-#' @examples m_DB_index_multi(multivariate_object(infert,1))
-m_DB_index_multi=function(object, method='encoding'){
+#' @examples m_DB_index(multivariate_object(infert,1))
+m_DB_index=function(object, method='encoding'){
 
   # prétraitement le data
 
