@@ -14,13 +14,13 @@ always_allow_html: true
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
 ```
 
-## Introduction
+# Introduction
 
 This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
 
-### Short Descriptions of datasets
+## Short Descriptions of datasets
 
-#### Iris : 
+### Iris : 
 
 The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
 
@@ -28,20 +28,20 @@ The data set consists of 50 samples from each of three species of Iris (Iris set
 summary(iris)
 ```
 
-#### Infert : 
+### Infert : 
 This is a matched case-control study dating from before the availability of conditional logistic regression.
 ```{r infert}
 summary(infert)
 ```
 
-#### Esoph : 
+### Esoph : 
 Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
 ```{r esoph}
 summary(esoph)
 ```
 
 
-## Import ClustersAnalysis from Github (using devtools)
+# Import ClustersAnalysis from Github (using devtools)
 
 
 
@@ -52,7 +52,7 @@ summary(esoph)
 
 #install package from github
 #Use the below line to install ClustersAnalysis if necessary
-devtools::install_github("clepadellec/ClustersAnalysis")
+#devtools::install_github("clepadellec/ClustersAnalysis")
 
 #load package
 library(ClustersAnalysis)
@@ -60,7 +60,7 @@ library(ClustersAnalysis)
 ```
 
 
-### How to access to help
+## How to access to help
 
 You can juste use the fonction help(function name) to see all the documentation about your function.
 ```{r}
@@ -80,10 +80,46 @@ u_esoph<-Univariate_object(esoph,1)
 print(u_esoph)
 ```
 
-### Contingency table and size effect
+## Contingency table and size effect
 
 The first thing we can do is to create a contingency table between the explanatory variable and the group variable and then visualize lines/columns profils. In our case the explanatory variable is "tobgp" which is the tobacco consumption (gm/day). To do this you can use the **u_desc_profils**
 ```{r}
-#ClustersAnalysis::u_desc_profils(u_esoph,3,interact=TRUE)
-ClustersAnalysis::u_desc_profils((Univariate_object(esoph,1)),3)
+#use intecract=TRUE to show an interactive graphique with widgets like zoom, comparisons...
+ClustersAnalysis::u_desc_profils(u_esoph,3,interact=FALSE)
+```
+The distributions don't show any particular phenomena. The most represented classes are the 35-44  and 55-64 years. Then we can see that there are more than a half that smokes less than 20 g/days. The only fact that we can see is that the 75+ people are close to 75% to don't smoke a lot.
+
+
+Now we are going to see in details if there is a size effect between these two variables. To do this we can use **u_desc_size_effect** which return the test statistic vt (comparison between proportions). Then we can also use **u_plot_size_effect** which create a mosaic plot.
+
+```{r}
+u_desc_size_effect(u_esoph,3)
+#use intecract=TRUE to show an interactive graphique with widgets like zoom, comparisons...
+u_plot_size_effect(u_esoph,3,interact=FALSE)
+```
+If we refer to the results we can see that the biggest "vt" values are for 75+ peoples who smokes 0-9g/day or 10-19 g/day. So this is for these two combinations that one can most easily conclude that there is an over-representation. We can use the mosaic plot to confirm our comment.
+
+You can do the sames analyses for the variable "tobgp".
+
+
+## Chisq test
+
+We can now use **u_chisq_test_all** which is use to calculate the p-avlue for a chisq test between the group variable and each qualitatives variables.
+
+```{r}
+u_chisq_test_all(u_esoph)
+```
+Here we can see that the p-avlues are very high which mean that we accept the null hypothesis and the variables are independant. Because of this, it's useless to calculate v-cramer.
+
+If you want to see significant results you can run the code below, the aim is to predict the sexe according to many qualitatives attributs. We can see that for each chisq.test, we can conclude that the sex depends on the attributs. But the attributs which has the most influence is "qualif".
+```{r}
+#install.packages("questionr")
+#library(questionr)
+# data(hdv2003)
+# d<- hdv2003[,3:8]
+# u_chisq_test_all(Univariate_object(d,1))
+```
+
+
+```{r}
 ```

@@ -85,7 +85,7 @@ u_desc_size_effect <- function(object,ind_var_exp){
 #' @examples u_chisq_test_all(Univariate_object(esoph,1))
 u_chisq_test_all <- function(object){
   options(warn=-1)
-  if (length(object$ind.quan[object$ind.qual==TRUE]==1)){
+  if (length(object$ind.qual[object$ind.qual==TRUE])==1){
     return("Aucunes variables explicatives de votre dataframe n'est qualitative !")
     stop()
   }
@@ -771,4 +771,10 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 # u_esoph<-Univariate_object(esoph,1)
 # u_desc_profils(u_esoph,3,interact=TRUE)
 
-
+# u_chisq_test_all(Univariate_object(esoph,3))
+#
+# install.packages("questionr")
+# library(questionr)
+# data(hdv2003)
+# d<- hdv2003[,3:8]
+# u_chisq_test_all(Univariate_object(d,1))
