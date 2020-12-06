@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
 
 # Introduction
 
-This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
+This is a demonstration of using the R package ClustersAnalysis. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
 
 ## Short Descriptions of datasets
 
@@ -68,7 +68,7 @@ help("u_plot_size_effect")
 ```
 
 
-## Univariate Analysis for qualitatives variariables
+# Univariate Analysis for qualitatives variariables
 
 To begin we will try to understand, for each qualitative explanatory variable, if it affects the group variable. It's necessary to create an object of univariate type. You can use the constructor **Univariate_object**.
 ```{r}
@@ -120,6 +120,64 @@ If you want to see significant results you can run the code below, the aim is to
 # u_chisq_test_all(Univariate_object(d,1))
 ```
 
+## Correspondence analysis
 
+To better visualize if some groups are close to a particular modality we can use correspondence analysis. The **u_afc_plot** function return a biplot to visualize our results.
 ```{r}
+u_afc_plot((Univariate_object(esoph,1)),3)
 ```
+
+In our case the principal information that we can see is that the 25-34 peoples are quite close to 30+g/day. It's a new information that we didn’t have before. 
+
+
+# Univariate Analysis for quantitatives variables
+
+Now we are going to use the famous iris dataset. The aim si to understand how the Species can be described.
+```{r}
+
+#Creation of univariate object with the "Species" as group variable
+u_iris <-Univariate_object(iris,5)
+```
+
+
+## Means comparisons (using student test)
+
+To begin we are going to search for each group and each explanatory variable if the fact to belong to a species or not have an influence on the length and the width of Petal/Sepal. To do this we use **u_ttest_all**, this function for each group, separates the group variable into two modalities : target modality or others modality. Then we verify normality hypothesis and if it's possible we use a student test to define if it's significative or not.
+```{r}
+ u_ttest_all(u_iris)
+```
+Here we can see that each group have one or many significatives variables which mean that the fact to belong to setosa,versicolor or virginica have an influence on the attributs.
+
+## Fisher Test
+```{r}
+u_fisher_test_all(u_iris)
+```
+
+
+## Test Value for clustering (for only one explanatory variable)
+```{r}
+d<-iris[,c(1,5)]
+
+u_test_value(Univariate_object(d,2))
+
+```
+
+## Silhouettes indices
+```{r}
+u_silhouette_ind(u_iris)
+u_silhouette_plot(u_iris, interact=FALSE)
+```
+
+
+
+## Principal component analysis
+```{r}
+u_sil_pca_plot(u_iris,interact = FALSE)
+```
+
+## Rand Index
+```{r}
+u_kmean_rand_index(u_iris)
+```
+
+# Multivariate Analysis

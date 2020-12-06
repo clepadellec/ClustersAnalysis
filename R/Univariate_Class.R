@@ -778,3 +778,4 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 # data(hdv2003)
 # d<- hdv2003[,3:8]
 # u_chisq_test_all(Univariate_object(d,1))
+# u_afc_plot((Univariate_object(esoph,1)),3)
