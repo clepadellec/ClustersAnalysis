@@ -768,5 +768,7 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 
 }
 
+# u_esoph<-Univariate_object(esoph,1)
+# u_desc_profils(u_esoph,3,interact=TRUE)
 
 

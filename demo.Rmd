@@ -14,35 +14,28 @@ always_allow_html: true
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
 ```
 
-## Introduction  
+## Introduction
 
-  This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
+This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
 
-### Short Descriptions of datasets  
+### Short Descriptions of datasets
 
 #### Iris : 
 
-
-  The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
+The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
 
 ```{r iris}
 summary(iris)
 ```
 
-#### Infert :   
-
-
-  This is a matched case-control study dating from before the availability of conditional logistic regression.
-
-
+#### Infert : 
+This is a matched case-control study dating from before the availability of conditional logistic regression.
 ```{r infert}
 summary(infert)
 ```
 
-### Esoph : 
-
-  Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
-
+#### Esoph : 
+Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
 ```{r esoph}
 summary(esoph)
 ```
@@ -58,7 +51,8 @@ summary(esoph)
 #library(devtools)
 
 #install package from github
-#devtools::install_github("clepadellec/ClustersAnalysis")
+#Use the below line to install ClustersAnalysis if necessary
+devtools::install_github("clepadellec/ClustersAnalysis")
 
 #load package
 library(ClustersAnalysis)
@@ -66,9 +60,30 @@ library(ClustersAnalysis)
 ```
 
 
+### How to access to help
+
+You can juste use the fonction help(function name) to see all the documentation about your function.
 ```{r}
-#ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
+help("u_plot_size_effect")
+```
 
-ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5),interact = FALSE)
 
+## Univariate Analysis for qualitatives variariables
+
+To begin we will try to understand, for each qualitative explanatory variable, if it affects the group variable. It's necessary to create an object of univariate type. You can use the constructor **Univariate_object**.
+```{r}
+
+#Creation of univariate object using esoph dataframe and "agegp" (first column) as the group variable
+u_esoph<-Univariate_object(esoph,1)
+
+#detail of attributes associated with the object
+print(u_esoph)
+```
+
+### Contingency table and size effect
+
+The first thing we can do is to create a contingency table between the explanatory variable and the group variable and then visualize lines/columns profils. In our case the explanatory variable is "tobgp" which is the tobacco consumption (gm/day). To do this you can use the **u_desc_profils**
+```{r}
+#ClustersAnalysis::u_desc_profils(u_esoph,3,interact=TRUE)
+ClustersAnalysis::u_desc_profils((Univariate_object(esoph,1)),3)
 ```
