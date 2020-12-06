@@ -4,10 +4,27 @@
 \alias{u_sil_pca_plot}
 \title{Title}
 \usage{
-u_sil_pca_plot(object, i = 1, j = 2, rescale = FALSE, d = "euclidean")
+u_sil_pca_plot(
+  object,
+  i = 1,
+  j = 2,
+  rescale = FALSE,
+  d = "euclidean",
+  interact = TRUE
+)
 }
 \arguments{
-\item{d}{}
+\item{object}{your Univariate object}
+
+\item{i}{the first axe}
+
+\item{j}{the second axe}
+
+\item{rescale}{a boolean to rescale or not}
+
+\item{d}{distance type}
+
+\item{interact}{if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot}
 }
 \value{
 

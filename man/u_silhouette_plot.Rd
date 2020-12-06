@@ -4,7 +4,7 @@
 \alias{u_silhouette_plot}
 \title{Title}
 \usage{
-u_silhouette_plot(object, rescale = FALSE, d = "euclidean")
+u_silhouette_plot(object, rescale = FALSE, d = "euclidean", interact = TRUE)
 }
 \arguments{
 \item{object}{your Univariate object}
@@ -12,6 +12,8 @@ u_silhouette_plot(object, rescale = FALSE, d = "euclidean")
 \item{rescale}{rescale or not}
 
 \item{d}{the distance measure to be used and this must be "euclidean" or "L1"}
+
+\item{interact}{if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot}
 }
 \value{
 the silhouette plot

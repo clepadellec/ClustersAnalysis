@@ -189,6 +189,7 @@ u_Mosaic_plot <- function(explanatory, cluster){
     geom_bar(stat = "identity", aes(width = marginVar1, fill = cluster), col = "Grey") +
     geom_text(aes(label = as.character(explanatory), x = Explanatory, y = 1.1))
 
+
   return(g)
 }
 
@@ -196,7 +197,7 @@ u_Mosaic_plot <- function(explanatory, cluster){
 #'
 #' @param object your univariate object
 #' @param ind_var_exp the indice of your explanatory variable(only qualitative)
-#'
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
 #' @return a mosaic plot which is the distribution of your explanatory variable by class
 #'
 #'
@@ -206,7 +207,7 @@ u_Mosaic_plot <- function(explanatory, cluster){
 #' @export
 #'
 #' @examples u_plot_size_effect((Univariate_object(esoph,1)),2)
-u_plot_size_effect<- function(object,name_var_exp){
+u_plot_size_effect<- function(object,name_var_exp, interact=TRUE){
   var_groupe <- object$name_group
   x=object$df[[name_var_exp]]
   y=object$df[[var_groupe]]
@@ -214,7 +215,8 @@ u_plot_size_effect<- function(object,name_var_exp){
   df=data.frame("explanatory"=x, "cluster"=y)
   p <- u_Mosaic_plot(df$explanatory,df$cluster)
 
-  return(ggplotly(p))
+  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
+
 }
 
 #' Title
@@ -531,14 +533,14 @@ u_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 #' @param object your Univariate object
 #' @param rescale rescale or not
 #' @param d the distance measure to be used and this must be "euclidean" or "L1"
-#'
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
 #' @return the silhouette plot
 #' @rawNamespace import(plotly, except = last_plot)
 #' @import ggplot2
 #' @export
 #'
 #' @examples u_silhouette_plot(Univariate_object(iris,5))
-u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
+u_silhouette_plot=function(object, rescale=FALSE, d="euclidean", interact=TRUE){
   var_groupe <- object$name_group
   sil=u_silhouette_ind(object,rescale,d)
   y=object$df[[var_groupe]]
@@ -553,7 +555,7 @@ u_silhouette_plot=function(object, rescale=FALSE, d="euclidean"){
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
     labs(title="Silhouette coefficient ") +ylim(-1,1)
 
- return(ggplotly(g))
+  if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
 
@@ -691,12 +693,12 @@ u_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 
 #' Title
 #'
-#' @param object
-#' @param i
-#' @param j
-#' @param rescale
-#' @param d
-#'
+#' @param object your Univariate object
+#' @param i the first axe
+#' @param j the second axe
+#' @param rescale a boolean to rescale or not
+#' @param d distance type
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
 #' @return
 #' @rawNamespace import(plotly, except = last_plot)
 #' @import ggplot2
@@ -705,7 +707,7 @@ u_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 #' @export
 #'
 #' @examples u_sil_pca_plot(Univariate_object(iris,5))
-u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
+u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=TRUE){
   indice= object$group
 
   X=object$df[,-indice]
@@ -754,7 +756,7 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean"){
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
 
-  return(ggplotly(g))
+  if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
 

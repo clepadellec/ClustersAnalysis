@@ -4,10 +4,12 @@
 \alias{u_plot_size_effect}
 \title{Title}
 \usage{
-u_plot_size_effect(object, name_var_exp)
+u_plot_size_effect(object, name_var_exp, interact = TRUE)
 }
 \arguments{
 \item{object}{your univariate object}
+
+\item{interact}{if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot}
 
 \item{ind_var_exp}{the indice of your explanatory variable(only qualitative)}
 }

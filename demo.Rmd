@@ -1,14 +1,9 @@
 ---
-title: "<center> **How to use ClustersAnalysis Package**</center><br/>"
-author: ''
-date: "<center>`r format(Sys.time(), '%d %B %Y')`</center><br/><br/><br/>Table of contents"
+title: '**How to use ClustersAnalysis Package**'
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '5'
-  word_document:
-    toc: yes
-    toc_depth: '5'
+  pdf_document: default
+  word_document: default
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -23,6 +18,7 @@ This is a demonstration of using the R package Clusters. You will see how to ana
 
 #### Iris
 
+
 The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
 
 ```{r iris}
@@ -30,13 +26,19 @@ summary(iris)
 ```
 
 #### Infert
+
+
 This is a matched case-control study dating from before the availability of conditional logistic regression.
+
+
 ```{r infert}
 summary(infert)
 ```
 
 ### Esoph
+
 Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
+
 ```{r esoph}
 summary(esoph)
 ```
@@ -59,11 +61,10 @@ library(ClustersAnalysis)
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
 ```{r}
 #ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
 
-ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5))
+ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5),interact = FALSE)
 
 ```
-
