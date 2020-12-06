@@ -143,19 +143,21 @@ u_afc_plot <- function(object,ind_var_exp){
 #'
 #' @param object your Univariate object
 #' @param ind_var_exp the indice of the explanatory variable (only qualitative)
-#'
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
 #' @return contingency table between group and explanatory variables and the rows and columns profils
 #' @import questionr
 #' @export
 #'
 #' @examples u_desc_profils((Univariate_object(esoph,1)),3)
-u_desc_profils <- function(object,ind_var_exp){
+u_desc_profils <- function(object,ind_var_exp,interact=TRUE){
   if (is.character(object$df[[ind_var_exp]])==FALSE & is.factor(object$df[[ind_var_exp]])==FALSE){
     return("Votre variable explicative n'est pas qualitative ! ")
     stop()
   }
   #mise en place du tableau de contingence
   contingence <- table(object$df[[object$group]],object$df[[ind_var_exp]])
+  tab <- as.data.frame(contingence)
+  colnames(tab)<- c("cluster","explanatory","Freq")
   #on affiche les resultats
   print("Tableau de contingence : ")
   print(contingence)
@@ -163,7 +165,13 @@ u_desc_profils <- function(object,ind_var_exp){
   print(lprop(contingence, digits=1))
   print("Profils colonnes : ")
   print(cprop(contingence, digits=2))
+  p <-ggplot(tab, aes(fill = explanatory, y = Freq, x = cluster)) + geom_bar(position ="stack", stat = "identity")
+  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
+
 }
+
+
+
 
 #' Title
 #'
@@ -760,6 +768,5 @@ u_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 
 }
 
-#u_plot_size_effect((Univariate_object(esoph,1)),2)
 
 

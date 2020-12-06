@@ -4,12 +4,14 @@
 \alias{u_desc_profils}
 \title{Title}
 \usage{
-u_desc_profils(object, ind_var_exp)
+u_desc_profils(object, ind_var_exp, interact = TRUE)
 }
 \arguments{
 \item{object}{your Univariate object}
 
 \item{ind_var_exp}{the indice of the explanatory variable (only qualitative)}
+
+\item{interact}{if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot}
 }
 \value{
 contingency table between group and explanatory variables and the rows and columns profils

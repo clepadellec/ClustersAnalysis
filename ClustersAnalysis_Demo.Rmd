@@ -35,7 +35,7 @@ This is a matched case-control study dating from before the availability of cond
 summary(infert)
 ```
 
-### Esoph
+#### Esoph
 Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
 ```{r esoph}
 summary(esoph)
@@ -61,9 +61,14 @@ library(ClustersAnalysis)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 ```{r}
-#ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
+help("u_plot_size_effect")
+```
 
-ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5))
+
+```{r}
+ClustersAnalysis::u_plot_size_effect((Univariate_object(esoph,1)),2)
+
+#ClustersAnalysis::u_sil_pca_plot(Univariate_object(iris,5))
 
 ```
 

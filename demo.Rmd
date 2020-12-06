@@ -1,8 +1,12 @@
 ---
 title: '**How to use ClustersAnalysis Package**'
 output:
-  pdf_document: default
-  word_document: default
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+  word_document:
+    toc: yes
+    toc_depth: '5'
 always_allow_html: true
 ---
 
@@ -10,34 +14,34 @@ always_allow_html: true
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
 ```
 
-## Introduction
+## Introduction  
 
-This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
+  This is a demonstration of using the R package Clusters. You will see how to analyze classes according to one or more variables. The group variable must be of the type factor or character and the exploratory variables can be quantitative or qualitative. In this demonstration we are going to use natives dataset from R such as "iris", "infert" or "esoph".
 
-### Short Descriptions of datasets
+### Short Descriptions of datasets  
 
-#### Iris
+#### Iris : 
 
 
-The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
+  The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other.
 
 ```{r iris}
 summary(iris)
 ```
 
-#### Infert
+#### Infert :   
 
 
-This is a matched case-control study dating from before the availability of conditional logistic regression.
+  This is a matched case-control study dating from before the availability of conditional logistic regression.
 
 
 ```{r infert}
 summary(infert)
 ```
 
-### Esoph
+### Esoph : 
 
-Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
+  Data from a case-control study of (o)esophageal cancer in Ille-et-Vilaine, France. This is a data frame with records for 88 age/alcohol/tobacco combinations.
 
 ```{r esoph}
 summary(esoph)
