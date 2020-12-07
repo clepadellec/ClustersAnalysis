@@ -58,11 +58,12 @@ multivariate_object=function(df,ind_group_class){
 #' @examples
 #' m_type_variable(iris$Sepal.Length)
 m_type_variable=function(x){
-  if (class(x)=='character'|length(unique(x))<7){
-    type=('qualitative')
-  } else{
-    type=('quantitative')
-  }
+  if (is.factor(x)==TRUE|is.character(x)==TRUE){
+    type='qualitative'
+  }else{
+    type='quantitative'
+    }
+
   return(type)
 }
 
@@ -118,7 +119,7 @@ m_data_type=function(X){
 #' @return data encoding with rescale or not
 #'
 #' @import fastDummies
-#'
+#' @export
 #' @examples
 m_dummy_data=function(data, rescale=FALSE){
 
@@ -129,24 +130,27 @@ m_dummy_data=function(data, rescale=FALSE){
   variable_qualitative=colnames(data)[t=="qualitative"]
   variable_quantitative=colnames(data)[t=="quantitative"]
   if (length(variable_qualitative)==0){
-    return("There is no qualitative variable in this data")
-    break
+#    return("There is no qualitative variable in this data")
+#    break
+    datafbis=dataf
   } else{
-    dataf= dummy_cols(data, select_columns = variable_qualitative, remove_selected_columns = TRUE)
+    datafbis= dummy_cols(dataf, select_columns = variable_qualitative, remove_selected_columns = TRUE)
   }
 
+datafbisbis=datafbis
 
   if (rescale==TRUE){
     if (length(variable_quantitative)==0){
-      return("There is no quantitative variable in this data")
-      break
+#      return("There is no quantitative variable in this data")
+#      break
+      datafbisis=datafbis
     } else{
       for (i in variable_quantitative){
-        dataf[i]=scale(dataf[i], center = T, scale = T)
+        datafbisbis[i]=scale(datafbis[i], center = T, scale = T)
       }
     }
   }
-  return(dataf)
+  return(datafbisbis)
 }
 
 
@@ -203,7 +207,7 @@ m_mean_distance=function(X,y){
 #'
 m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
   X=object$df
-  print(X)
+#  print(X)
   # indice= object$group
   # X=object$df[,-indice]
   y=object$group
@@ -230,7 +234,7 @@ m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
   moyenne_distance=m_mean_distance(matrice_distance,y)
   sil=c()
   m=nrow(moyenne_distance)
-  print(m)
+#  print(m)
   if (nlevels(y)==1){
     sil=rep(-1,m)
   } else{
@@ -359,7 +363,8 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
   colnames(acp)=c("Dimi", "Dimj")
   g= ggplot(acp, aes(Dimi,Dimj, color =sil, shape =cluster)) +
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
-    theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
+    theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
+    labs(title="ACP and Silhouette")
 
   if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
@@ -544,11 +549,30 @@ m_rand_ajusted=function(g1,g2){
 #'
 #' @examples m_kmean_rand_index(multivariate_object(infert,1))
 #'
-m_kmean_rand_index=function(object){
+m_kmean_rand_index=function(object, rescale=FALSE){
   X=object$df
   y=object$group
+
+  if (m_data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (m_data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
+  }
+
+  if (m_data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
+
+
   n=length(unique(y))
-  X_cr=scale(X,center = T,scale = T)
+  X_cr=scale(X_bis,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
   rand=m_rand_index(n_means$cluster,y)
@@ -570,11 +594,31 @@ m_kmean_rand_index=function(object){
 #'
 #' @examples m_kmean_rand_ajusted(multivariate_object(infert,1))
 #'
-m_kmean_rand_ajusted=function(object){
+m_kmean_rand_ajusted=function(object, rescale=FALSE){
   X=object$df
   y=object$group
+
+
+  if (m_data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (m_data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
+  }
+
+  if (m_data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
+
+
   n=length(unique(y))
-  X_cr=scale(X,center = T,scale = T)
+  X_cr=scale(X_bis,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
   rand=m_rand_ajusted(n_means$cluster,y)
@@ -599,10 +643,27 @@ m_kmean_rand_ajusted=function(object){
 #'
 #' @examples m_kmean_clustering_plot(multivariate_object(infert,1))
 #'
-m_kmean_clustering_plot=function(object,i=1,j=2, interact=TRUE){
+m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
 
   X=object$df
   y=object$group
+
+  if (m_data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (m_data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
+  }
+
+  if (m_data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
 
 #  if (class(y)!="factor"){
 #    return("y must be a factor")
@@ -614,7 +675,7 @@ m_kmean_clustering_plot=function(object,i=1,j=2, interact=TRUE){
     stop()
   }
 
-  acp=acp_2_axes(X,i,j)
+  acp=acp_2_axes(X_bis,i,j)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
   percent1=as.numeric(substr(a,11,12))
@@ -624,7 +685,7 @@ m_kmean_clustering_plot=function(object,i=1,j=2, interact=TRUE){
 
 
   n=length(unique(y))
-  X_cr=scale(X,center = T,scale = T)
+  X_cr=scale(X_bis,center = T,scale = T)
   n_means=kmeans(X_cr,centers = n,nstart = 5)
   cluster_kmean=n_means$cluster
 
@@ -648,14 +709,20 @@ m_kmean_clustering_plot=function(object,i=1,j=2, interact=TRUE){
 #' @export
 #'
 #' @examples m_R2_multivariate(multivariate_object(infert,1))
-m_R2_multivariate=function(object, method='encoding'){
+m_R2_multivariate=function(object, method='encoding', rescale=FALSE){
 
   data=object$df
   g=object$group
 
-  if (data_type(data)=='qualitatives'| data_type(data)=='qualitative-quantitative'){
+  data_bis=data
+
+  if (m_data_type(data)=='quantitative-qualitative'){
+      data_bis=m_dummy_data(data,rescale)
+  }
+
+  if (m_data_type(data)=='qualitatives'){
     if (method=='encoding'){
-      data_bis=m_dummy_data(data)
+      data_bis=m_dummy_data(data,rescale)
     } else{
       p=ncol(data)
       M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
@@ -663,8 +730,7 @@ m_R2_multivariate=function(object, method='encoding'){
       ACM=MCA(data, ncp = n_acm, graph = FALSE)
       data_bis=ACM$ind$coord
     }
-  } else{
-    data_bis=data
+
   }
 
 
@@ -765,16 +831,22 @@ m_acm_plot <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 #' @export
 #'
 #' @examples m_DB_index(multivariate_object(infert,1))
-m_DB_index=function(object, method='encoding'){
+m_DB_index=function(object, method='encoding', rescale=FALSE){
 
   # prétraitement le data
 
   data=object$df
   g=object$group
 
-  if (data_type(data)=='qualitatives' | data_type(data)=='qualitative-quantitative'){
+  data_bis=data
+
+  if (m_data_type(data)=='quantitative-qualitative'){
+    data_bis=m_dummy_data(data,rescale)
+  }
+
+  if (m_data_type(data)=='qualitatives'){
     if (method=='encoding'){
-      data_bis=m_dummy_data(data)
+      data_bis=m_dummy_data(data,rescale)
     } else{
       p=ncol(data)
       M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
@@ -782,9 +854,9 @@ m_DB_index=function(object, method='encoding'){
       ACM=MCA(data, ncp = n_acm, graph = FALSE)
       data_bis=ACM$ind$coord
     }
-  } else{
-    data_bis=data
+
   }
+
 
 
 

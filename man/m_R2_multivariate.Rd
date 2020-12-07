@@ -4,7 +4,7 @@
 \alias{m_R2_multivariate}
 \title{Rapport Correlation Multivariate}
 \usage{
-m_R2_multivariate(object, method = "encoding")
+m_R2_multivariate(object, method = "encoding", rescale = FALSE)
 }
 \arguments{
 \item{object}{your Multivariate object}

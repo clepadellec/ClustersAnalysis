@@ -4,7 +4,7 @@
 \alias{m_kmean_rand_index}
 \title{Title}
 \usage{
-m_kmean_rand_index(object)
+m_kmean_rand_index(object, rescale = FALSE)
 }
 \arguments{
 \item{object}{your Multivariate object}

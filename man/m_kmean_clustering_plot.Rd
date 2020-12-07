@@ -4,7 +4,7 @@
 \alias{m_kmean_clustering_plot}
 \title{Title}
 \usage{
-m_kmean_clustering_plot(object, i = 1, j = 2, interact = TRUE)
+m_kmean_clustering_plot(object, i = 1, j = 2, rescale = FALSE, interact = TRUE)
 }
 \arguments{
 \item{object}{your Multivariate object}

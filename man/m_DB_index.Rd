@@ -4,7 +4,7 @@
 \alias{m_DB_index}
 \title{Indice de Davies-Boulin}
 \usage{
-m_DB_index(object, method = "encoding")
+m_DB_index(object, method = "encoding", rescale = FALSE)
 }
 \arguments{
 \item{object}{your Multivariate object}
