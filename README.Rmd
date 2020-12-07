@@ -1,7 +1,9 @@
 ---
 title: '**How to use ClustersAnalysis Package**'
+author: ' Melissande Jourdan-Laforte - Huynh Cong Bang - Clément Le Padellec '
 output:
   md_document:
+    toc: true
 always_allow_html: true
 ---
 
@@ -89,7 +91,7 @@ print(u_esoph)
 The first thing we can do is to create a contingency table between the explanatory variable and the group variable and then visualize lines/columns profils. In our case the explanatory variable is "tobgp" which is the tobacco consumption (gm/day). To do this you can use the **u_desc_profils**
 ```{r}
 #use interact=TRUE to show an interactive graphique with widgets like zoom, comparisons...
-ClustersAnalysis::u_desc_profils(u_esoph,3,interact=TRUE)
+ClustersAnalysis::u_desc_profils(u_esoph,3,interact=FALSE)
 ```
 The distributions don't show any particular phenomena. The most represented classes are the 35-44  and 55-64 years. Then we can see that there are more than a half that smokes less than 20 g/days. The only fact that we can see is that the 75+ people are close to 75% to don't smoke a lot.
 
@@ -152,11 +154,13 @@ To begin we are going to search for each group and each explanatory variable if 
 ```
 Here we can see that each group have one or many significatives variables which mean that the fact to belong to setosa,versicolor or virginica have an influence on the attributs.
 
-## Fisher Test
+## Fisher Test on correlation
+
+The aim is to established if there is correlation between group variable and an other quantitative variable.
 ```{r}
 u_fisher_test_all(u_iris)
 ```
-
+Here we can see that each variable has a p-value lower than 0.05 which mean that there is a link between the group variable and quantitatives data. Moreover we can see that "eta2" which are the correlation values are quite high.
 
 
 
@@ -200,10 +204,12 @@ m_R2_multivariate(m_CO2, rescale = TRUE)
 ```
 
 ## Internal measures
+
 Two internal measures are investigated in this section in order to evaluate the goodness of a clustering structure without respect to external information including Silhouette index and Davies Boulin index. 
 
 
 ### Silhouette index
+
 Silhouette coefficient of Iris data is high for all three species (setorsa, versicolor and virginica), which unifies results of R square in the previous part. In other words, these four explanatory variables clearly categorize three types of flowers mentioned above. Moreover, silhouette coefficient of setosa is extremely higher than that of two types rest. This results provide that setosa is separated to the rest, which can be observed by graphic "ACP and Silhouette" representing individuals in the factorial plan in which different shapes represent variables groups, at the meanwhile, distinguish colors represent silhouette coefficients.
 
 
@@ -236,18 +242,24 @@ Davies Bouldin index of the origin of the plants (CO2 data) are high (4.55), the
 ```{r}
 m_DB_index(m_CO2, rescale = TRUE)
 ```
+
 ## External measure
+
 Two external measures in this section are investigated in order to comparing two partitions including Rand index and Ajusted Rand index.
 
 ### Rand index
+
 We establish an artificial partition from k-mean algorithm and we compute the Rand index between variables group and artificial partition. Rand index of Iris data is very high (0.83), hence, this partition and variables group are similar. Further, Rand index of CO2 data is equal 0.49, thus, Ajusted Rand index is examined.
 
 
 ```{r}
 m_kmean_rand_index(m_iris) 
 m_kmean_rand_index(m_CO2, rescale=TRUE)
+
 ```
+
 ### Ajusted Rand index
+
 Based on the results of Ajusted Rand index of Iris data, we could strongly confirm that artificial partition and variables group are strongly similar. Furthermore, Ajusted Rand index of CO2 data is low, resulting that there is no similar of two partitions.
 
 ```{r}
@@ -256,7 +268,9 @@ m_kmean_rand_ajusted(m_CO2, rescale = TRUE)
 ```
 
 ### Comparison between kmean clustering and variable group
+
 This graphic illustrates individuals on the factorial plan in which different shapes represent variables groups, at the meanwhile, distinguish colors represent artificial partitions.
+
 ```{r}
 m_kmean_clustering_plot(m_iris, interact = FALSE)
 m_kmean_clustering_plot(m_iris, interact = FALSE, i=1,j=3)
@@ -271,6 +285,7 @@ m_kmean_clustering_plot(m_CO2, rescale=TRUE, interact = FALSE, i=2,j=3)
 
 
 ## Test value for clustering
+
 Data analyzing allows us to several conclusions. First, Petal.Length shows the most effective characterization on Setosa and virginica. Second, Sepal.Width characterizes most powerful to versicolor.
 
 ```{r}
@@ -289,12 +304,15 @@ This function used to detect and represent underlying structures in a qualitativ
 m_acm_plot(multivariate_object(CO2[,1:3],1))
 ```
 
+Here we can see that the fours groups are very distinct and if we look at the data it's normal. On this dataset this function is a little bit useless because it return logical facts.
 
 
 
 
 
+# Let's practice on your own dataset
 
+Now that you have seen how the package works, it is up to you to use it on your own data. Remember to use the help() function to access all documentation.
 
 
 

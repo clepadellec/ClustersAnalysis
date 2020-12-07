@@ -1,3 +1,40 @@
+-   [Introduction](#introduction)
+    -   [Short Descriptions of
+        datasets](#short-descriptions-of-datasets)
+        -   [Iris :](#iris)
+        -   [Infert :](#infert)
+        -   [Esoph :](#esoph)
+        -   [CO2 :](#co2)
+-   [Import ClustersAnalysis from Github (using
+    devtools)](#import-clustersanalysis-from-github-using-devtools)
+    -   [How to access to help](#how-to-access-to-help)
+-   [Univariate Analysis for qualitatives
+    variariables](#univariate-analysis-for-qualitatives-variariables)
+    -   [Contingency table and size
+        effect](#contingency-table-and-size-effect)
+    -   [Chisq test](#chisq-test)
+    -   [Correspondence analysis](#correspondence-analysis)
+-   [Univariate Analysis for quantitatives
+    variables](#univariate-analysis-for-quantitatives-variables)
+    -   [Means comparisons (using student
+        test)](#means-comparisons-using-student-test)
+    -   [Fisher Test on correlation](#fisher-test-on-correlation)
+-   [Multivariate Analysis](#multivariate-analysis)
+    -   [Proportion between inter-class inertia and total inertia (R
+        square)](#proportion-between-inter-class-inertia-and-total-inertia-r-square)
+    -   [Internal measures](#internal-measures)
+        -   [Silhouette index](#silhouette-index)
+        -   [Davies Bouldin index](#davies-bouldin-index)
+    -   [External measure](#external-measure)
+        -   [Rand index](#rand-index)
+        -   [Ajusted Rand index](#ajusted-rand-index)
+        -   [Comparison between kmean clustering and variable
+            group](#comparison-between-kmean-clustering-and-variable-group)
+    -   [Test value for clustering](#test-value-for-clustering)
+    -   [Multiple component analysis](#multiple-component-analysis)
+-   [Let’s practice on your own
+    dataset](#lets-practice-on-your-own-dataset)
+
 Introduction
 ============
 
@@ -251,7 +288,7 @@ which is the tobacco consumption (gm/day). To do this you can use the
 **u\_desc\_profils**
 
     #use interact=TRUE to show an interactive graphique with widgets like zoom, comparisons...
-    ClustersAnalysis::u_desc_profils(u_esoph,3,interact=TRUE)
+    ClustersAnalysis::u_desc_profils(u_esoph,3,interact=FALSE)
 
     ## [1] "Tableau de contingence : "
     ##        
@@ -283,16 +320,11 @@ which is the tobacco consumption (gm/day). To do this you can use the
     ##   75+    16.67    16.67   5.00  10.00  12.50  
     ##   Total 100.00   100.00 100.00 100.00 100.00
 
-<!--html_preserve-->
-
-<script type="application/json" data-for="htmlwidget-1268c6f5eaa2cb6cf57c">{"x":{"data":[{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[11,11,12,12,11,7],"x":[1,2,3,4,5,6],"y":[4,4,4,4,4,4],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 35-44<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 45-54<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 55-64<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 65-74<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 75+<br />Freq: 4<br />explanatory: 0-9g/day"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"0-9g/day","legendgroup":"0-9g/day","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[7,7,8,8,7,3],"x":[1,2,3,4,5,6],"y":[4,4,4,4,4,4],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 10-19","cluster: 35-44<br />Freq: 4<br />explanatory: 10-19","cluster: 45-54<br />Freq: 4<br />explanatory: 10-19","cluster: 55-64<br />Freq: 4<br />explanatory: 10-19","cluster: 65-74<br />Freq: 4<br />explanatory: 10-19","cluster: 75+<br />Freq: 4<br />explanatory: 10-19"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"10-19","legendgroup":"10-19","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[4,3,4,4,3,2],"x":[1,2,3,4,5,6],"y":[3,4,4,4,4,1],"text":["cluster: 25-34<br />Freq: 3<br />explanatory: 20-29","cluster: 35-44<br />Freq: 4<br />explanatory: 20-29","cluster: 45-54<br />Freq: 4<br />explanatory: 20-29","cluster: 55-64<br />Freq: 4<br />explanatory: 20-29","cluster: 65-74<br />Freq: 4<br />explanatory: 20-29","cluster: 75+<br />Freq: 1<br />explanatory: 20-29"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"20-29","legendgroup":"20-29","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[0,0,0,0,0,0],"x":[1,2,3,4,5,6],"y":[4,3,4,4,3,2],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 30+","cluster: 35-44<br />Freq: 3<br />explanatory: 30+","cluster: 45-54<br />Freq: 4<br />explanatory: 30+","cluster: 55-64<br />Freq: 4<br />explanatory: 30+","cluster: 65-74<br />Freq: 3<br />explanatory: 30+","cluster: 75+<br />Freq: 2<br />explanatory: 30+"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"30+","legendgroup":"30+","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,6.6],"tickmode":"array","ticktext":["25-34","35-44","45-54","55-64","65-74","75+"],"tickvals":[1,2,3,4,5,6],"categoryorder":"array","categoryarray":["25-34","35-44","45-54","55-64","65-74","75+"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"cluster","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.8,16.8],"tickmode":"array","ticktext":["0","5","10","15"],"tickvals":[0,5,10,15],"categoryorder":"array","categoryarray":["0","5","10","15"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Freq","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.93503937007874},"annotations":[{"text":"explanatory","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10c858746f2f":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"10c858746f2f","visdat":{"10c858746f2f":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<!--/html_preserve-->
-
-The distributions don’t show any particular phenomena. The most
-represented classes are the 35-44 and 55-64 years. Then we can see that
-there are more than a half that smokes less than 20 g/days. The only
-fact that we can see is that the 75+ people are close to 75% to don’t
-smoke a lot.
+![](README_files/figure-markdown_strict/unnamed-chunk-4-1.png) The
+distributions don’t show any particular phenomena. The most represented
+classes are the 35-44 and 55-64 years. Then we can see that there are
+more than a half that smokes less than 20 g/days. The only fact that we
+can see is that the 75+ people are close to 75% to don’t smoke a lot.
 
 Now we are going to see in details if there is a size effect between
 these two variables. To do this we can use **u\_desc\_size\_effect**
@@ -416,8 +448,11 @@ Here we can see that each group have one or many significatives
 variables which mean that the fact to belong to setosa,versicolor or
 virginica have an influence on the attributs.
 
-Fisher Test
------------
+Fisher Test on correlation
+--------------------------
+
+The aim is to established if there is correlation between group variable
+and an other quantitative variable.
 
     u_fisher_test_all(u_iris)
 
@@ -426,6 +461,11 @@ Fisher Test
     ## Sepal.Width  0.4007828   49.16004       0
     ## Petal.Length 0.9413717 1180.16118       0
     ## Petal.Width  0.9288829  960.00715       0
+
+Here we can see that each variable has a p-value lower than 0.05 which
+mean that there is a link between the group variable and quantitatives
+data. Moreover we can see that “eta2” which are the correlation values
+are quite high.
 
 Multivariate Analysis
 =====================
@@ -706,3 +746,14 @@ qualitative data set.
     m_acm_plot(multivariate_object(CO2[,1:3],1))
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-24-2.png)
+
+Here we can see that the fours groups are very distinct and if we look
+at the data it’s normal. On this dataset this function is a little bit
+useless because it return logical facts.
+
+Let’s practice on your own dataset
+==================================
+
+Now that you have seen how the package works, it is up to you to use it
+on your own data. Remember to use the help() function to access all
+documentation.
