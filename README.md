@@ -250,8 +250,8 @@ lines/columns profils. In our case the explanatory variable is “tobgp”
 which is the tobacco consumption (gm/day). To do this you can use the
 **u\_desc\_profils**
 
-    #use intecract=TRUE to show an interactive graphique with widgets like zoom, comparisons...
-    ClustersAnalysis::u_desc_profils(u_esoph,3,interact=FALSE)
+    #use interact=TRUE to show an interactive graphique with widgets like zoom, comparisons...
+    ClustersAnalysis::u_desc_profils(u_esoph,3,interact=TRUE)
 
     ## [1] "Tableau de contingence : "
     ##        
@@ -283,11 +283,16 @@ which is the tobacco consumption (gm/day). To do this you can use the
     ##   75+    16.67    16.67   5.00  10.00  12.50  
     ##   Total 100.00   100.00 100.00 100.00 100.00
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-4-1.png) The
-distributions don’t show any particular phenomena. The most represented
-classes are the 35-44 and 55-64 years. Then we can see that there are
-more than a half that smokes less than 20 g/days. The only fact that we
-can see is that the 75+ people are close to 75% to don’t smoke a lot.
+<!--html_preserve-->
+
+<script type="application/json" data-for="htmlwidget-1268c6f5eaa2cb6cf57c">{"x":{"data":[{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[11,11,12,12,11,7],"x":[1,2,3,4,5,6],"y":[4,4,4,4,4,4],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 35-44<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 45-54<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 55-64<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 65-74<br />Freq: 4<br />explanatory: 0-9g/day","cluster: 75+<br />Freq: 4<br />explanatory: 0-9g/day"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"0-9g/day","legendgroup":"0-9g/day","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[7,7,8,8,7,3],"x":[1,2,3,4,5,6],"y":[4,4,4,4,4,4],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 10-19","cluster: 35-44<br />Freq: 4<br />explanatory: 10-19","cluster: 45-54<br />Freq: 4<br />explanatory: 10-19","cluster: 55-64<br />Freq: 4<br />explanatory: 10-19","cluster: 65-74<br />Freq: 4<br />explanatory: 10-19","cluster: 75+<br />Freq: 4<br />explanatory: 10-19"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"10-19","legendgroup":"10-19","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[4,3,4,4,3,2],"x":[1,2,3,4,5,6],"y":[3,4,4,4,4,1],"text":["cluster: 25-34<br />Freq: 3<br />explanatory: 20-29","cluster: 35-44<br />Freq: 4<br />explanatory: 20-29","cluster: 45-54<br />Freq: 4<br />explanatory: 20-29","cluster: 55-64<br />Freq: 4<br />explanatory: 20-29","cluster: 65-74<br />Freq: 4<br />explanatory: 20-29","cluster: 75+<br />Freq: 1<br />explanatory: 20-29"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"20-29","legendgroup":"20-29","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.9,0.9,0.9,0.9,0.9],"base":[0,0,0,0,0,0],"x":[1,2,3,4,5,6],"y":[4,3,4,4,3,2],"text":["cluster: 25-34<br />Freq: 4<br />explanatory: 30+","cluster: 35-44<br />Freq: 3<br />explanatory: 30+","cluster: 45-54<br />Freq: 4<br />explanatory: 30+","cluster: 55-64<br />Freq: 4<br />explanatory: 30+","cluster: 65-74<br />Freq: 3<br />explanatory: 30+","cluster: 75+<br />Freq: 2<br />explanatory: 30+"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"30+","legendgroup":"30+","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,6.6],"tickmode":"array","ticktext":["25-34","35-44","45-54","55-64","65-74","75+"],"tickvals":[1,2,3,4,5,6],"categoryorder":"array","categoryarray":["25-34","35-44","45-54","55-64","65-74","75+"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"cluster","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.8,16.8],"tickmode":"array","ticktext":["0","5","10","15"],"tickvals":[0,5,10,15],"categoryorder":"array","categoryarray":["0","5","10","15"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Freq","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.93503937007874},"annotations":[{"text":"explanatory","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10c858746f2f":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"10c858746f2f","visdat":{"10c858746f2f":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<!--/html_preserve-->
+
+The distributions don’t show any particular phenomena. The most
+represented classes are the 35-44 and 55-64 years. Then we can see that
+there are more than a half that smokes less than 20 g/days. The only
+fact that we can see is that the 75+ people are close to 75% to don’t
+smoke a lot.
 
 Now we are going to see in details if there is a size effect between
 these two variables. To do this we can use **u\_desc\_size\_effect**
@@ -321,8 +326,8 @@ plot.
 
     ## Warning: Ignoring unknown aesthetics: width
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-5-1.png) If we refer
-to the results we can see that the biggest “vt” values are for 75+
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png) If we
+refer to the results we can see that the biggest “vt” values are for 75+
 peoples who smokes 0-9g/day or 10-19 g/day. So this is for these two
 combinations that one can most easily conclude that there is an
 over-representation. We can use the mosaic plot to confirm our comment.
@@ -370,7 +375,7 @@ biplot to visualize our results.
 
     u_afc_plot((Univariate_object(esoph,1)),3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 In our case the principal information that we can see is that the 25-34
 peoples are quite close to 30+g/day. It’s a new information that we
@@ -525,11 +530,11 @@ silhouette coefficients.
 
     m_silhouette_plot(m_iris, interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-15-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
     m_sil_pca_plot(m_iris, interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-15-2.png) In
+![](README_files/figure-markdown_strict/unnamed-chunk-15-2.png) In
 contrast, Silhouette coefficient of CO2 data is low for the origin of
 the plant (Quebec and Mississippi) unifying results of R square above.
 
@@ -555,19 +560,19 @@ the plant (Quebec and Mississippi) unifying results of R square above.
 
     m_silhouette_plot(m_CO2,rescale = TRUE, interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
     m_sil_pca_plot(m_CO2, rescale=TRUE,interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-16-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-16-2.png)
 
     m_sil_pca_plot(m_CO2, rescale=TRUE,interact = FALSE, i=1,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-16-3.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-16-3.png)
 
     m_sil_pca_plot(m_CO2, rescale=TRUE,interact = FALSE, i=2,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-16-4.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-16-4.png)
 
 ### Davies Bouldin index
 
@@ -639,27 +644,27 @@ distinguish colors represent artificial partitions.
 
     m_kmean_clustering_plot(m_iris, interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-21-1.png)
 
     m_kmean_clustering_plot(m_iris, interact = FALSE, i=1,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-21-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-21-2.png)
 
     m_kmean_clustering_plot(m_iris, interact = FALSE,i=2,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-21-3.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-21-3.png)
 
     m_kmean_clustering_plot(m_CO2, rescale=TRUE, interact = FALSE)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-22-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-22-1.png)
 
     m_kmean_clustering_plot(m_CO2, rescale=TRUE, interact = FALSE, i=1,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-22-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-22-2.png)
 
     m_kmean_clustering_plot(m_CO2, rescale=TRUE, interact = FALSE, i=2,j=3)
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-22-3.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-22-3.png)
 
 Test value for clustering
 -------------------------
@@ -700,4 +705,4 @@ qualitative data set.
 
     m_acm_plot(multivariate_object(CO2[,1:3],1))
 
-![](demo_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](demo_files/figure-markdown_strict/unnamed-chunk-24-2.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](README_files/figure-markdown_strict/unnamed-chunk-24-2.png)
