@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_ttest_all}
 \alias{u_ttest_all}
-\title{Title}
+\title{Mean's comparison using student test}
 \usage{
 u_ttest_all(object)
 }
@@ -13,7 +13,7 @@ u_ttest_all(object)
 a table with the combination of each group X explanatory variable. For each combination, you can see if the fact to belong to a group as an influence on the explonatories variables (based on student test, means comparisons)
 }
 \description{
-Title
+Mean's comparison using student test
 }
 \examples{
 u_ttest_all(Univariate_object(esoph,1))

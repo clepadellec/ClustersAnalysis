@@ -756,4 +756,5 @@ Let’s practice on your own dataset
 
 Now that you have seen how the package works, it is up to you to use it
 on your own data. Remember to use the help() function to access all
-documentation.
+documentation and \*\*don’t forget to use “interact=TRUE” on the plot to
+see interactive plot !

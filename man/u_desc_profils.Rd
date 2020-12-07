@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_desc_profils}
 \alias{u_desc_profils}
-\title{Title}
+\title{See raws and columns profils, and a barplot}
 \usage{
 u_desc_profils(object, ind_var_exp, interact = TRUE)
 }
@@ -17,7 +17,7 @@ u_desc_profils(object, ind_var_exp, interact = TRUE)
 contingency table between group and explanatory variables and the rows and columns profils
 }
 \description{
-Title
+See raws and columns profils, and a barplot
 }
 \examples{
 u_desc_profils((Univariate_object(esoph,1)),3)

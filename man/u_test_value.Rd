@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_test_value}
 \alias{u_test_value}
-\title{Title}
+\title{Calculate the test value}
 \usage{
 u_test_value(object, i = 1)
 }
@@ -15,5 +15,5 @@ u_test_value(object, i = 1)
 the explanatory variable which caracterize the most the class of your group variable you choose
 }
 \description{
-Title
+Calculate the test value
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_desc_size_effect}
 \alias{u_desc_size_effect}
-\title{Title}
+\title{Function to see if some class are over-representend or not}
 \usage{
 u_desc_size_effect(object, ind_var_exp)
 }
@@ -15,7 +15,7 @@ u_desc_size_effect(object, ind_var_exp)
 the vtest value for each class(group variable)/modality(explanatory variable)
 }
 \description{
-Title
+Function to see if some class are over-representend or not
 }
 \examples{
 u_desc_size_effect((Univariate_object(esoph,1)),3)

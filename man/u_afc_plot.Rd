@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_afc_plot}
 \alias{u_afc_plot}
-\title{Title}
+\title{Vizualise modality and class on the same plan}
 \usage{
 u_afc_plot(object, ind_var_exp)
 }
@@ -15,7 +15,7 @@ u_afc_plot(object, ind_var_exp)
 a factorial projection between group variable and explanatory variable
 }
 \description{
-Title
+Vizualise modality and class on the same plan
 }
 \examples{
 u_afc_plot((Univariate_object(esoph,1)),3)

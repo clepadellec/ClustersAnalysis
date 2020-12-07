@@ -1,4 +1,4 @@
-#' Title
+#' Constructor for multivariate object
 #'
 #' @param df your dataframe including explanatory features and the group feature(target)
 #' @param ind_group_class the indice of your group feature
@@ -194,7 +194,7 @@ m_mean_distance=function(X,y){
 }
 
 
-#' Title
+#' Calculate index silhouette
 #'
 #' @param object your Multavariate object
 #' @param rescale
@@ -304,7 +304,8 @@ m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 }
 
 
-#' Title
+#' Plot silhouette index with Component analysis
+#'
 #' @param object your Multivariate object
 #' @param i
 #' @param j
@@ -353,7 +354,7 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 
 
 
-  acp=acp_2_axes(X_bis,i,j)
+  acp=m_acp_2_axes(X_bis,i,j)
   sil=m_silhouette_ind(object,rescale,d)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
@@ -371,7 +372,8 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 }
 
 
-#' Title
+#' Plot silhouette index
+#'
 #' @param object your Multivariate object
 #' @param rescale
 #' @param d method used
@@ -405,7 +407,7 @@ m_silhouette_plot=function(object, rescale=FALSE, d="euclidean", interact=TRUE){
 }
 
 
-#' Title
+#' Calculate the test value
 #'
 #' @param object your Multivariate object
 #' @param i i-th cluster
@@ -452,7 +454,7 @@ m_test.value=function(object, i=1){
 }
 
 
-#' Title
+#' Calculate rand index
 #'
 #' @param g1 first cluster
 #' @param g2 second cluster
@@ -492,7 +494,7 @@ m_rand_index=function(g1,g2){
 
 
 
-#' Title
+#' Calculate adjusted rand index
 #'
 #' @param g1 first cluster
 #' @param g2 second cluster
@@ -540,7 +542,7 @@ m_rand_ajusted=function(g1,g2){
 
 
 
-#' Title
+#' Compare two partitions, real classes vs kmeans classes
 #'
 #' @param object your Multivariate object
 #'
@@ -585,53 +587,13 @@ m_kmean_rand_index=function(object, rescale=FALSE){
 
 
 
-#' Title
-#'
-#' @param object your Multivariate object
-#'
-#' @return ajusted rand index between the result of kmean and y
-#' @export
-#'
-#' @examples m_kmean_rand_ajusted(multivariate_object(infert,1))
-#'
-m_kmean_rand_ajusted=function(object, rescale=FALSE){
-  X=object$df
-  y=object$group
-
-
-  if (m_data_type(X)=="quantitatives"){
-    X_bis=X
-  }
-
-  if (m_data_type(X)=="quantitative"){
-    X_bis=data.frame(X)
-  }
-
-  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
-    X_bis=m_dummy_data(X,rescale)
-  }
-
-  if (m_data_type(X)=='qualitative'){
-    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
-  }
-
-
-
-  n=length(unique(y))
-  X_cr=scale(X_bis,center = T,scale = T)
-  n_means=kmeans(X_cr,centers = n,nstart = 5)
-
-  rand=m_rand_ajusted(n_means$cluster,y)
-  return(rand)
-
-}
 
 
 
 
 
 
-#' Title
+#' plot cluster on the first two dimensions
 #' @param object your Multivariate object
 #' @param i
 #' @param j
@@ -675,7 +637,7 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
     stop()
   }
 
-  acp=acp_2_axes(X_bis,i,j)
+  acp=m_acp_2_axes(X_bis,i,j)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
   percent1=as.numeric(substr(a,11,12))
@@ -784,7 +746,7 @@ m_acm_plot <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
   df=object$df
 
-  if (data_type(df)!= 'qualitatives'){
+  if (m_data_type(df)!= 'qualitatives'){
     return('dataframe must contain qualitatives features')
     stop()
   }
@@ -820,7 +782,7 @@ m_acm_plot <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
 
 
-#' Indice de Davies-Boulin
+#' Davies-Boulin Indice
 #'
 #' @param object your Multivariate object
 #' @param

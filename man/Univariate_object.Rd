@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{Univariate_object}
 \alias{Univariate_object}
-\title{Title}
+\title{Constructor for the univariate object}
 \usage{
 Univariate_object(df, ind_group_class)
 }
@@ -15,7 +15,7 @@ Univariate_object(df, ind_group_class)
 an object which is going to be use to analyze clustering
 }
 \description{
-Title
+Constructor for the univariate object
 }
 \examples{
 Univariate_object(esoph,1)

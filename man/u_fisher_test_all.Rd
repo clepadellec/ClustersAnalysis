@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_fisher_test_all}
 \alias{u_fisher_test_all}
-\title{Title}
+\title{Calculate correlation for each quantitatives variable and calculate the p-value using fisher}
 \usage{
 u_fisher_test_all(object)
 }
@@ -13,7 +13,7 @@ u_fisher_test_all(object)
 a dataframe with a summary of Fisher test between the target variable and others quanlitatives variables
 }
 \description{
-Title
+Calculate correlation for each quantitatives variable and calculate the p-value using fisher
 }
 \examples{
 u_fisher_test_all(Univariate_object(iris,5))

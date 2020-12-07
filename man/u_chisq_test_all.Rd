@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_chisq_test_all}
 \alias{u_chisq_test_all}
-\title{Title}
+\title{Function to apply chisq test between your group variable and all your qualitatives variables}
 \usage{
 u_chisq_test_all(object)
 }
@@ -13,7 +13,7 @@ u_chisq_test_all(object)
 all the chisq.test value between your qualitatives variables and your group variable (with interpretation)
 }
 \description{
-Title
+Function to apply chisq test between your group variable and all your qualitatives variables
 }
 \examples{
 u_chisq_test_all(Univariate_object(esoph,1))

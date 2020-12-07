@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_eta2}
 \alias{u_eta2}
-\title{Title}
+\title{Calculate the correlation}
 \usage{
 u_eta2(x, g)
 }
@@ -15,5 +15,5 @@ u_eta2(x, g)
 correlation value
 }
 \description{
-Title
+Calculate the correlation
 }

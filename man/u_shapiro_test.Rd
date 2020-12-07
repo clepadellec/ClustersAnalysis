@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_shapiro_test}
 \alias{u_shapiro_test}
-\title{Title}
+\title{Shapiro test}
 \usage{
 u_shapiro_test(pop_a, pop_b)
 }
@@ -15,5 +15,5 @@ u_shapiro_test(pop_a, pop_b)
 TRUE if gaussian hypothesis is verified or FALSE if it's not verified
 }
 \description{
-Title
+Shapiro test
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_Mosaic_plot}
 \alias{u_Mosaic_plot}
-\title{Title}
+\title{Create mosaic plot}
 \usage{
 u_Mosaic_plot(explanatory, cluster)
 }
 \arguments{
-\item{explanatory}{your expl}
+\item{explanatory}{your explanatory variable}
 
 \item{cluster}{}
 }
@@ -15,5 +15,5 @@ u_Mosaic_plot(explanatory, cluster)
 
 }
 \description{
-Title
+Create mosaic plot
 }

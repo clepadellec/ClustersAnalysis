@@ -2,7 +2,7 @@
 % Please edit documentation in R/Univariate_Class.R
 \name{u_plot_size_effect}
 \alias{u_plot_size_effect}
-\title{Title}
+\title{Plot the size effect with a mosaic plot}
 \usage{
 u_plot_size_effect(object, name_var_exp, interact = TRUE)
 }
@@ -17,7 +17,7 @@ u_plot_size_effect(object, name_var_exp, interact = TRUE)
 a mosaic plot which is the distribution of your explanatory variable by class
 }
 \description{
-Title
+Plot the size effect with a mosaic plot
 }
 \examples{
 u_plot_size_effect((Univariate_object(esoph,1)),2)

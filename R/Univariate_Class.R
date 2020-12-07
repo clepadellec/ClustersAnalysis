@@ -1,4 +1,4 @@
-#' Title
+#' Constructor for the univariate object
 #'
 #' @param df your dataframe including explanatory variables and the group variable(target)
 #' @param ind_group_class the indice of your group variable
@@ -39,7 +39,7 @@ Univariate_object <- function(df,ind_group_class){
 }
 
 
-#' Title
+#' Function to see if some class are over-representend or not
 #'
 #' @param object your Univariate object
 #' @param ind_var_exp the qualitative explanatory variable
@@ -74,7 +74,7 @@ u_desc_size_effect <- function(object,ind_var_exp){
   return(vtest)
 }
 
-#' Title
+#' Function to apply chisq test between your group variable and all your qualitatives variables
 #'
 #' @param object your Univariate object
 #'
@@ -115,7 +115,7 @@ u_chisq_test_all <- function(object){
   return(res)
 }
 
-#' Title
+#' Vizualise modality and class on the same plan
 #'
 #' @param object your Univariate object
 #' @param ind_var_exp the indice of the explanatory variable (only qualitative)
@@ -139,7 +139,7 @@ u_afc_plot <- function(object,ind_var_exp){
 
 }
 
-#' Title
+#' See raws and columns profils, and a barplot
 #'
 #' @param object your Univariate object
 #' @param ind_var_exp the indice of the explanatory variable (only qualitative)
@@ -173,9 +173,9 @@ u_desc_profils <- function(object,ind_var_exp,interact=TRUE){
 
 
 
-#' Title
+#' Create mosaic plot
 #'
-#' @param explanatory your expl
+#' @param explanatory your explanatory variable
 #' @param cluster
 #'
 #' @return
@@ -201,7 +201,7 @@ u_Mosaic_plot <- function(explanatory, cluster){
   return(g)
 }
 
-#' Title
+#' Plot the size effect with a mosaic plot
 #'
 #' @param object your univariate object
 #' @param ind_var_exp the indice of your explanatory variable(only qualitative)
@@ -227,7 +227,7 @@ u_plot_size_effect<- function(object,name_var_exp, interact=TRUE){
 
 }
 
-#' Title
+#' Shapiro test
 #'
 #' @param pop_a the first population to test
 #' @param pop_b the second population to test
@@ -245,7 +245,7 @@ u_shapiro_test <- function(pop_a,pop_b){
   return(hyp_gauss)
 }
 
-#' Title
+#' Mean's comparison using student test
 #'
 #' @param object your Univariate object
 #'
@@ -293,7 +293,7 @@ u_ttest_all <- function(object){
 }
 
 
-#' Title
+#' Calculate the test value
 #'
 #' @param object your Univariate object
 #' @param i the number of your target group
@@ -344,7 +344,7 @@ u_test_value=function(object,i=1){
 
 
 
-#' Title
+#' Calculate the correlation
 #'
 #' @param x a variable with quantitative value
 #' @param g a factor such that length(x)=length(g)
@@ -362,7 +362,7 @@ u_eta2=function(x,g){
   return(eta)
 }
 
-#' Title
+#' Calculate correlation for each quantitatives variable and calculate the p-value using fisher
 #'
 #' @param object your Univariate object
 #'
@@ -384,18 +384,3 @@ u_fisher_test_all=function(object){
 }
 
 
-
-# u_esoph<-Univariate_object(esoph,1)
-# u_desc_profils(u_esoph,3,interact=TRUE)
-
-# u_chisq_test_all(Univariate_object(esoph,3))
-#
-# install.packages("questionr")
-# library(questionr)
-# data(hdv2003)
-# d<- hdv2003[,3:8]
-# u_chisq_test_all(Univariate_object(d,1))
-# u_afc_plot((Univariate_object(esoph,1)),3)
-#d<-iris[,c(1,5)]
-
-#u_test_value(Univariate_object(d,2))
