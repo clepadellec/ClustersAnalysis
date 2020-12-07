@@ -1,12 +1,7 @@
 ---
 title: '**How to use ClustersAnalysis Package**'
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '5'
-  word_document:
-    toc: yes
-    toc_depth: '5'
+  md_document:
 always_allow_html: true
 ---
 
@@ -163,31 +158,8 @@ u_fisher_test_all(u_iris)
 ```
 
 
-## Test Value for clustering (for only one explanatory variable)
-```{r}
-d<-iris[,c(1,5)]
-
-u_test_value(Univariate_object(d,2))
-
-```
-
-## Silhouettes indices
-```{r}
-#u_silhouette_ind(u_iris)
-#u_silhouette_plot(u_iris, interact=FALSE)
-```
 
 
-
-## Principal component analysis
-```{r}
-#u_sil_pca_plot(u_iris,interact = FALSE)
-```
-
-## Rand Index
-```{r}
-#u_kmean_rand_index(u_iris)
-```
 
 # Multivariate Analysis
 

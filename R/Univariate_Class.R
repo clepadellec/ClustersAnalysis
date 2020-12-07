@@ -384,6 +384,7 @@ u_fisher_test_all=function(object){
 }
 
 
+
 # u_esoph<-Univariate_object(esoph,1)
 # u_desc_profils(u_esoph,3,interact=TRUE)
 
