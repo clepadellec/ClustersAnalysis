@@ -135,7 +135,7 @@ Import ClustersAnalysis from Github (using devtools)
     #install.packages("devtools")
     #library(devtools)
 
-    #install package from github
+    #install package from github or download the folder and open it with R
     #Use the below line to install ClustersAnalysis if necessary
     #devtools::install_github("clepadellec/ClustersAnalysis")
 
