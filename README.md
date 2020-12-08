@@ -673,11 +673,11 @@ resulting that there is no similar of two partitions.
 
     m_kmean_rand_ajusted(m_iris)
 
-    ## [1] 0.6318665
+    ## [1] 0.6201352
 
     m_kmean_rand_ajusted(m_CO2, rescale = TRUE)
 
-    ## [1] 0.1941748
+    ## [1] -0.01219512
 
 ### Comparison between kmean clustering and variable group
 

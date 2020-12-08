@@ -728,7 +728,7 @@ m_rand_ajusted=function(g1,g2){
         c=c+1
       }
       if ((g1[i]!=g1[j]) & (g2[i]==g2[j])){
-        c=c+1
+        d=d+1
       }
     }
   }
