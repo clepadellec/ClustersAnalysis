@@ -58,6 +58,7 @@ multivariate_object=function(df,ind_group_class){
 #' @examples
 #' m_type_variable(iris$Sepal.Length)
 m_type_variable=function(x){
+  #s'il sagit d'un facteur ou character on est bien sur une variable quali
   if (is.factor(x)==TRUE|is.character(x)==TRUE){
     type='qualitative'
   }else{
@@ -111,7 +112,7 @@ m_data_type=function(X){
 }
 
 
-#' Title
+#' one hot recoding
 #'
 #' @param data a datafram
 #' @param rescale a boolean
@@ -126,6 +127,7 @@ m_dummy_data=function(data, rescale=FALSE){
   dataf=data
 
   col_names=colnames(data)
+
   t=sapply(data, m_type_variable)
   variable_qualitative=colnames(data)[t=="qualitative"]
   variable_quantitative=colnames(data)[t=="quantitative"]
