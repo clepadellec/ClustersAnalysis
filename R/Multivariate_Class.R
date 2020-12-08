@@ -29,12 +29,21 @@ multivariate_object=function(df,ind_group_class){
     stop('La taille de g est différente le nombre de ligne du data')
   }
 
+  #df_without_grp <- df[,-ind_group_class]
   instance=list()
+
+  #test si quanti ou quali
   ind.qual <- sapply(df, function(x) is.factor(x)| is.character(x))
   ind.quan <- sapply(df, function(x) is.numeric(x)| is.integer(x))
+
+  #on recupere les indices associés
   instance$ind.qual <- ind.qual
   instance$ind.quan <- ind.quan
+
+  #on supprime les lignes qui contiennent des NA
   df <- na.omit(df)
+
+  #on passe la variable de groupe en character
   df[,ind_group_class] <- as.character(df[,ind_group_class])
   instance$df <- df[,-ind_group_class]
   instance$group <- df[,ind_group_class]
@@ -80,13 +89,12 @@ m_type_variable=function(x){
 #' @examples
 #' m_data_type(iris)
 m_data_type=function(X){
+
+  #déterminer le type des variables dans le dataframe
   quali_quanti=sapply(X, FUN = m_type_variable)
-  #  quali_quanti=c()
-  #  n=ncol(X)
-  #  for (i in 1:n){
-  #    quali_quanti=c(quali_quanti,type_variable(X[,i]))
-  #  }
   tab=table(quali_quanti)
+
+  #déterminer le type du data en fonction du nombre des variables qualitatives/quantitatives
   name=names(tab)
   if (length(name)==2){
     type="quantitative-qualitative"
@@ -126,11 +134,20 @@ m_dummy_data=function(data, rescale=FALSE){
 
   dataf=data
 
+
+  #nom des variables du data
   col_names=colnames(data)
 
+  #déterminer le type des variables
   t=sapply(data, m_type_variable)
+
+  #nom des variables qualitatives
   variable_qualitative=colnames(data)[t=="qualitative"]
+
+  #nom des variables quantitatives
   variable_quantitative=colnames(data)[t=="quantitative"]
+
+  #encoding one-hot si il y a au moins une variable qualitative, sinon on ne fait rien
   if (length(variable_qualitative)==0){
 #    return("There is no qualitative variable in this data")
 #    break
@@ -141,6 +158,8 @@ m_dummy_data=function(data, rescale=FALSE){
 
 datafbisbis=datafbis
 
+
+  #rescale des variables quantitatives si il y a au moins une variable quantitative et rescale=True, sinon on ne fait rien
   if (rescale==TRUE){
     if (length(variable_quantitative)==0){
 #      return("There is no quantitative variable in this data")
@@ -169,6 +188,8 @@ datafbisbis=datafbis
 #' @examples
 #' m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean")
 m_matrix_distance=function(X,d){
+
+  #une matrice de distance calculé entre deux individus en utilisant la fonction pdist du package rdist
   dist=pdist(X,d)
   return(dist)
 }
@@ -185,8 +206,14 @@ m_matrix_distance=function(X,d){
 #' @examples  m_mean_distance(m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean"), iris[,'Species'])
 #'
 m_mean_distance=function(X,y){
+
+  #nombre des individus
   m=nrow(X)
+
+  #liste vide des distances
   distance=c()
+
+  #calculer la distance moyenne entre chaque individu à chaque group
   for (i in 1:m){
     distance=rbind(distance,tapply(X[i,-i],y[-i], mean))
   }
@@ -208,35 +235,42 @@ m_mean_distance=function(X,y){
 #' @examples m_silhouette_ind(multivariate_object(iris,5))
 #'
 m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
+
   X=object$df
-#  print(X)
-  # indice= object$group
-  # X=object$df[,-indice]
   y=object$group
 
+  #si le data ne contient que des variables quantitatives, on ne fait rien
   if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
 
+  #si le data ne contient qu'une seule variable quantitative, on le transforme en dataframe
   if (m_data_type(X)=="quantitative"){
     X_bis=data.frame(X)
   }
 
+  #si le data contient à la fois des variables quantitatives et qualitatives, on le transforme en utilisant la fonction dummy_data
   if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
     X_bis=m_dummy_data(X,rescale)
   }
 
+  #si le data contient qu'une seule variable qualitative, on utilise encoding one-hot
   if (m_data_type(X)=='qualitative'){
     X_bis=dummy_cols(data.frame(X), remove_first_dummy  = F)[,-1]
   }
 
 
-
+  # récuperer matrice distance
   matrice_distance=m_matrix_distance(X_bis,d)
+
+  # récuperer la moyenne distance
   moyenne_distance=m_mean_distance(matrice_distance,y)
   sil=c()
+
+  #nombre des individus
   m=nrow(moyenne_distance)
-#  print(m)
+
+  #calculer le coefficient de silhouette de chaque individu
   if (nlevels(y)==1){
     sil=rep(-1,m)
   } else{
@@ -271,40 +305,35 @@ m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 #' m_acp_2_axes(iris[,-5])
 m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
 
+
+  #si un des deux indices sont plus grand que le nombre de variable ou egale à 0, on arrete
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
     stop()
   }
 
 
-  #  if (data_type(X)=="quantitatives"){
-  #    X_bis=X
-  #  }
-
-  #  if (data_type(X)=="quantitative"){
-  #    X_bis=data.frame(X)
-  #  }
-
-  #  if (data_type(X)=='quantitative-qualitative'|data_type(X)=='qualitatives'){
-  #    X_bis=dummy_data(X,rescale)
-  #  }
-
-  #  if (data_type(X)=='qualitative'){
-  #    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
-  #  }
-
-
+  #effectuer un ACP sur X
   acp=PCA(X,graph=FALSE)
+
+  #coordonne des individus sur les composantes factoriels
   acp.ind=acp$ind
   acp.ind.cord=acp.ind$coord
+
+  #creer un dataframe qui contient des coordonnes sur le i-ieme et j-ieme axe
   df=acp.ind.cord[,c(i,j)]
   dfbis=data.frame(df)
+
+  #pourcentage d'inertie du i-ieme composant
   PC1=round(acp$eig[,2][i])
+
+  #pourcentage d'inertie du j-ieme composant
   PC2=round(acp$eig[,2][j])
+
+  #renommer le nombre des colonnes du dfbis
   colnames(dfbis)=c(paste("Dim",i,"---",PC1,"%"), paste("Dim",j,"---",PC2,"%"))
   return(dfbis)
 }
-
 
 #' Plot silhouette index with Component analysis
 #'
@@ -327,43 +356,50 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
   X=object$df
   y=object$group
 
-#  if (class(y)!="factor"){
-#    return("y must be a factor")
-#    stop()
-#  }
 
+  #si un des deux indices sont plus grand que le nombre de variable ou egale à 0, on arrete
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
     stop()
   }
 
-
+  #si le data ne contient que des variables quantitatives, on ne fait rien
   if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
 
+  #si le data ne contient qu'une seule variable quantitative, on le transforme en dataframe
   if (m_data_type(X)=="quantitative"){
     X_bis=data.frame(X)
   }
 
+  #si le data contient à la fois des variables quantitatives et qualitatives, on le transforme en utilisant la fonction dummy_data
   if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
     X_bis=m_dummy_data(X,rescale)
   }
 
+  #si le data contient qu'une seule variable qualitative, on utilise encoding one-hot
   if (m_data_type(X)=='qualitative'){
     X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
   }
 
 
-
+  #Récuperer les coordonnés sur le i-ieme et j-ieme composante en utilisant la fonction m_acp_2_axes
   acp=m_acp_2_axes(X_bis,i,j)
+
+  #récuperer les silhouettes en utilisant la fonction m_silhouette_ind
   sil=m_silhouette_ind(object,rescale,d)
+
+
   a=colnames(acp)[1]
   b=colnames(acp)[2]
+
   percent1=as.numeric(substr(a,11,12))
   percent2=as.numeric(substr(b,11,12))
   cluster=y
   colnames(acp)=c("Dimi", "Dimj")
+
+  #effectuer une representation graphique sur i-ieme et j-ieme composante
   g= ggplot(acp, aes(Dimi,Dimj, color =sil, shape =cluster)) +
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))+
@@ -372,6 +408,9 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
   if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
+
+#####################STOP HERE ######################################
+
 
 
 #' Plot silhouette index
