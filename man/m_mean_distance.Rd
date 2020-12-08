@@ -2,7 +2,7 @@
 % Please edit documentation in R/Multivariate_Class.R
 \name{m_mean_distance}
 \alias{m_mean_distance}
-\title{Title}
+\title{Mean distance}
 \usage{
 m_mean_distance(X, y)
 }
@@ -15,7 +15,7 @@ m_mean_distance(X, y)
 a data frame containing the average distance of each row to all observations of each cluster C
 }
 \description{
-Title
+Mean distance
 }
 \examples{
  m_mean_distance(m_matrix_distance(iris[,c("Sepal.Length","Sepal.Width")],d="euclidean"), iris[,'Species'])

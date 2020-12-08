@@ -2,7 +2,7 @@
 % Please edit documentation in R/Multivariate_Class.R
 \name{m_dummy_data}
 \alias{m_dummy_data}
-\title{Title}
+\title{one hot recoding}
 \usage{
 m_dummy_data(data, rescale = FALSE)
 }
@@ -15,5 +15,5 @@ m_dummy_data(data, rescale = FALSE)
 data encoding with rescale or not
 }
 \description{
-Title
+one hot recoding
 }

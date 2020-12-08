@@ -1,3 +1,9 @@
+##############################################################################
+#                                 CONSTRUCTOR                                #-----------------------
+##############################################################################
+
+
+
 #' Constructor for multivariate object
 #'
 #' @param df your dataframe including explanatory features and the group feature(target)
@@ -57,6 +63,14 @@ multivariate_object=function(df,ind_group_class){
 }
 
 
+##############################################################################
+#                                 Internal Measures                          #-----------------------
+##############################################################################
+
+###
+#1#---
+###
+
 #' Verify the type of variables
 #'
 #' @param x a vector
@@ -77,6 +91,9 @@ m_type_variable=function(x){
   return(type)
 }
 
+###
+#2#---
+###
 
 #' All type possible in the dataframe
 #'
@@ -119,6 +136,9 @@ m_data_type=function(X){
 
 }
 
+###
+#3#---
+###
 
 #' one hot recoding
 #'
@@ -174,6 +194,9 @@ datafbisbis=datafbis
   return(datafbisbis)
 }
 
+###
+#4#---
+###
 
 #' Distance Matrix
 #'
@@ -194,8 +217,11 @@ m_matrix_distance=function(X,d){
   return(dist)
 }
 
+###
+#5#---
+###
 
-#' Title
+#' Mean distance
 #'
 #' @param X a numeric symmetric matrix containing the pairwise distance between the rows of a data frame
 #' @param y a factor such that length(X)=length(y)
@@ -222,6 +248,9 @@ m_mean_distance=function(X,y){
 
 }
 
+###
+#6#---
+###
 
 #' Calculate index silhouette
 #'
@@ -290,6 +319,10 @@ m_silhouette_ind=function(object,rescale=FALSE,d='euclidean'){
 
 }
 
+###
+#7#---
+###
+
 
 #' Values ACP with 2 dimensions
 #' @param X
@@ -334,6 +367,10 @@ m_acp_2_axes=function(X,i=1,j=2, rescale=FALSE){
   colnames(dfbis)=c(paste("Dim",i,"---",PC1,"%"), paste("Dim",j,"---",PC2,"%"))
   return(dfbis)
 }
+
+###
+#8#---
+###
 
 #' Plot silhouette index with Component analysis
 #'
@@ -409,8 +446,9 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 
 }
 
-#####################STOP HERE ######################################
-
+###
+#8#---
+###
 
 
 #' Plot silhouette index
@@ -428,14 +466,18 @@ m_sil_pca_plot=function(object,i=1,j=2, rescale=FALSE, d="euclidean", interact=T
 #'
 m_silhouette_plot=function(object, rescale=FALSE, d="euclidean", interact=TRUE){
 
+  #mise en forme des données
   X=object$df
   y=object$group
 
+  #calcul des indices de silhouettes
   sil=m_silhouette_ind(object,rescale,d)
+
+  #création d'un df avec les classes et leurs indices associés
   df=data.frame("silhouette"=sil, "cluster"=y)
 
-  # data frame contains the mean silhouette coefficient of clusters
 
+  # data frame contenant la moyenne des indices de silhouettes par classes
   t=tapply(df[,"silhouette"], df[,"cluster"],mean)
   df_bis=data.frame("silhouette"=as.numeric(t), "cluster"=names(t))
   # plot
@@ -446,6 +488,105 @@ m_silhouette_plot=function(object, rescale=FALSE, d="euclidean", interact=TRUE){
   if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
+
+###
+#9#---
+###
+
+#' Davies-Boulin Indice
+#'
+#' @param object your Multivariate object
+#' @param
+#'
+#' @return Indice de Davies-Bouldin
+#'
+#' @import FactoMineR
+#' @export
+#'
+#' @examples m_DB_index(multivariate_object(infert,1))
+m_DB_index=function(object, method='encoding', rescale=FALSE){
+
+  # prétraitement de données
+
+  data=object$df
+  g=object$group
+
+  data_bis=data
+
+  #si il existe une mixité au niveau des types de variables, on recode les qualis en one-hot
+  if (m_data_type(data)=='quantitative-qualitative'){
+    data_bis=m_dummy_data(data,rescale)
+  }
+
+  #si il n'y a que des quali, on recode puis on effectue une acm et on récupère les coordonnées des individus dans le plan
+  if (m_data_type(data)=='qualitatives'){
+    if (method=='encoding'){
+      data_bis=m_dummy_data(data,rescale)
+    } else{
+      p=ncol(data)
+      M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
+      n_acm=M-p
+      ACM=MCA(data, ncp = n_acm, graph = FALSE)
+      data_bis=ACM$ind$coord
+    }
+
+  }
+
+
+
+
+
+  G=apply(data_bis, MARGIN = 2, FUN = mean)
+  n_g=tapply(data_bis[,1],g,FUN = length)
+  n_G=length(unique(g))
+  columns=ncol(data_bis)
+  row=nrow(data_bis)
+  barycentre=c()
+  #calcul des barycentres
+  for (i in 1:columns){
+    barycentre=rbind(barycentre,tapply(data_bis[,i], g, FUN = mean))
+  }
+
+
+  nom_cluster=colnames(barycentre)
+  # calcul distance intra-classe
+  intra_DB=c()
+
+  for (nom in nom_cluster){
+    df_dataframe=data_bis[g==nom,]
+    len_df_dataframe=nrow(df_dataframe)
+    S=1/len_df_dataframe* sum(apply(df_dataframe,MARGIN = 1,FUN = function(x){return(sum((x-as.numeric(barycentre[,nom]))^2))}))
+
+    intra_DB=c(intra_DB,S)
+  }
+  intra_distance_DB=data.frame(intra_DB)
+  colnames(intra_distance_DB)="Indice de Davies Bouldin"
+  rownames(intra_distance_DB)=nom_cluster
+
+  # calcul distance entre des barycentres
+  dist=pdist(t(barycentre))
+
+
+  # calcul de l'indice DB
+  DB=c()
+
+  for (i in 1:n_G){
+    s=(intra_distance_DB[-i,]+intra_distance_DB[i,])/dist[i,-i]
+    DB=c(DB,max(s))
+  }
+
+  indice_DB_final=data.frame(DB)
+  colnames(indice_DB_final)='Indice de Davies Bouldin'
+  rownames(indice_DB_final)=nom_cluster
+  indice_DB_final
+
+
+  return(indice_DB_final)
+}
+
+##############################################################################
+#                                 Test Value                                 #-----------------------
+##############################################################################
 
 
 #' Calculate the test value
@@ -469,13 +610,17 @@ m_test.value=function(object, i=1){
   }
   n=length(g)
   m=ncol(data)
+  #calcul de la variance
   variance=apply(data,MARGIN = 2,FUN = function(x){return((n-1)/n*var(x))})
+  #calcul des moyennes par groupes
   moyenne_group=t(apply(data,MARGIN = 2, FUN=function(x){return(tapply(x,g,FUN=mean))}))
   moyenne=apply(data, MARGIN = 2,mean)
   len=tapply(data[,1],g, FUN = length)
   for ( j in 1:n_unique){
+    #calcul de la valeur test
     VT=(moyenne_group[,j]-moyenne)/sqrt(((n-len[j])/(n-1)*(variance/len[j])))
     pvalue=rep(0,length(VT))
+    #puis de la p-value associée
     for (k in 1:length(VT)){
       if (VT[k]<0){
         pvalue[k]=2*pnorm(VT[k])
@@ -483,6 +628,7 @@ m_test.value=function(object, i=1){
         pvalue[k]=2*(1-pnorm(VT[k]))
       }
     }
+    #mise en place d'un df ou on retournera la valeur test et la p-value
     df=data.frame(VT, pvalue)
     row.names(df)=colnames(data)
     colnames(df)[1]=as.character(unique(g)[j])
@@ -494,6 +640,13 @@ m_test.value=function(object, i=1){
 
 }
 
+##############################################################################
+#                                 External Measures                          #-----------------------
+##############################################################################
+
+###
+#1#---
+###
 
 #' Calculate rand index
 #'
@@ -509,11 +662,15 @@ m_rand_index=function(g1,g2){
     return("g1 and g2 must have the same length")
     stop()
   }
+
+  # a est le nombre des paires (x1,x2) groupés dans Y1 et également groupés dans Y2
   a=0
+  # b est le nombre des paires (x1,x2) qui sont séparés dans Y1 et dans Y2
   b=0
   c=0
   d=0
   n=length(g1)
+  #calcul de a et b
   for (i in 1:(n-1)){
     for (j in (i+1):n){
       if ((g1[i]==g1[j]) & (g2[i]==g2[j])){
@@ -524,6 +681,8 @@ m_rand_index=function(g1,g2){
       }
     }
   }
+
+  #calcul de l'indice de rand
   rand=(a+b)/((n*(n-1)/2))
 
   return(rand)
@@ -531,7 +690,9 @@ m_rand_index=function(g1,g2){
 
 
 
-
+###
+#2#---
+###
 
 
 
@@ -571,6 +732,7 @@ m_rand_ajusted=function(g1,g2){
       }
     }
   }
+  #calculs des différents termes puis de l'indice de rand ajusté
   rand1=a-(a+c)*(a+d)/(a+b+c+d)
   rand2=1/2*(2*a+c+d)-(a+c)*(a+d)/(a+b+c+d)
   rand=rand1/rand2
@@ -578,6 +740,9 @@ m_rand_ajusted=function(g1,g2){
   return(rand)
 }
 
+###
+#3#---
+###
 
 #' Compare two partitions, real classes vs kmeans classes (with ajusted indice)
 #'
@@ -593,6 +758,7 @@ m_kmean_rand_ajusted=function(object, rescale=FALSE){
   y=object$group
 
 
+  #on effectue un recodage one-hot si il y a des variables quali
   if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
@@ -612,15 +778,20 @@ m_kmean_rand_ajusted=function(object, rescale=FALSE){
 
 
   n=length(unique(y))
+  #centrage et réduction des valeurs
   X_cr=scale(X_bis,center = T,scale = T)
+  #mise en place du kmeans
   n_means=kmeans(X_cr,centers = n,nstart = 5)
 
+  #calcul de l'indice de rand ajusté
   rand=m_rand_ajusted(n_means$cluster,y)
   return(rand)
 
 }
 
-
+###
+#4#---
+###
 
 #' Compare two partitions, real classes vs kmeans classes
 #'
@@ -635,6 +806,7 @@ m_kmean_rand_index=function(object, rescale=FALSE){
   X=object$df
   y=object$group
 
+  #exactement la même démarche que l'algorithme du dessus mis à part le fait qu'on calcule l'indice de rand et non l'indice de rand ajusté
   if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
@@ -664,13 +836,9 @@ m_kmean_rand_index=function(object, rescale=FALSE){
 
 
 
-
-
-
-
-
-
-
+###
+#5#---
+###
 
 
 #' plot cluster on the first two dimensions
@@ -690,6 +858,7 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
   X=object$df
   y=object$group
 
+  #recodage one-hot au besoin
   if (m_data_type(X)=="quantitatives"){
     X_bis=X
   }
@@ -707,19 +876,20 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
   }
 
 
-#  if (class(y)!="factor"){
-#    return("y must be a factor")
-#    stop()
-#  }
 
+
+  #condition d'arret
   if (i==0|j==0|i>ncol(X) | j>ncol(X) ){
     return("the index must be larger than 0 and smaller than the number of variables")
     stop()
   }
 
+
+  #on effectue l'acp sur les deux axes renseignés
   acp=m_acp_2_axes(X_bis,i,j)
   a=colnames(acp)[1]
   b=colnames(acp)[2]
+  #On récupère les pourcentage d'explication par dimensions
   percent1=as.numeric(substr(a,11,12))
   percent2=as.numeric(substr(b,11,12))
   cluster=y
@@ -727,10 +897,14 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
 
 
   n=length(unique(y))
+  #centrage et réduction des données
   X_cr=scale(X_bis,center = T,scale = T)
+  #mise en place du kmeans
   n_means=kmeans(X_cr,centers = n,nstart = 5)
+
   cluster_kmean=n_means$cluster
 
+  #plot
   g= ggplot(acp, aes(Dimi,Dimj, color =cluster_kmean, shape =cluster)) +
     geom_point(size=3) +   labs(x = paste("Dim", i,'---', percent1, "%"), y = paste("Dim", j,'---', percent2, "%"))+
     theme(text = element_text(family = "serif", size=14), title = element_text(color = "#8b0000"))
@@ -738,6 +912,11 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
   if (interact==TRUE){return(ggplotly(g))}else{return(g)}
 
 }
+
+##############################################################################
+#                                 R square                                   #-----------------------
+##############################################################################
+
 
 
 #' Rapport Correlation Multivariate
@@ -753,11 +932,13 @@ m_kmean_clustering_plot=function(object,i=1,j=2, rescale=FALSE, interact=TRUE){
 #' @examples m_R2_multivariate(multivariate_object(infert,1))
 m_R2_multivariate=function(object, method='encoding', rescale=FALSE){
 
+  #mise en place des données
   data=object$df
   g=object$group
 
   data_bis=data
 
+  #recodage des données quali au besoin
   if (m_data_type(data)=='quantitative-qualitative'){
       data_bis=m_dummy_data(data,rescale)
   }
@@ -766,6 +947,7 @@ m_R2_multivariate=function(object, method='encoding', rescale=FALSE){
     if (method=='encoding'){
       data_bis=m_dummy_data(data,rescale)
     } else{
+      #si plusieurs quali alors on effectue une ACM et on recupère les coordonnées des individus dans le plan
       p=ncol(data)
       M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
       n_acm=M-p
@@ -777,18 +959,21 @@ m_R2_multivariate=function(object, method='encoding', rescale=FALSE){
 
 
 
-
+  #calcul des moyennes
   G=apply(data_bis, MARGIN = 2, FUN = mean)
   n_g=tapply(data_bis[,1],g,FUN = length)
   n_G=length(unique(g))
   columns=ncol(data_bis)
   row=nrow(data_bis)
   barycentre=c()
+  #calcul des barycentres
   for (i in 1:columns){
     barycentre=rbind(barycentre,tapply(data_bis[,i], g, FUN = mean))
   }
 
   S=0
+
+
   for (i in 1:n_G){
     s=as.numeric(n_g[i])*sum((as.numeric(barycentre[,i])-as.numeric(G))^2)
     S=S+s
@@ -801,12 +986,18 @@ m_R2_multivariate=function(object, method='encoding', rescale=FALSE){
 
   Inertie_total=sum((matrix_G-data_bis)^2)
 
+  #calcul de la valeur test
   valeur_test=S/Inertie_total
 
 
 
   return(valeur_test)
 }
+
+##############################################################################
+#                        Multiple component analysis                         #-----------------------
+##############################################################################
+
 
 
 #' Plot ACM multivariate
@@ -862,93 +1053,7 @@ m_acm_plot <- function(object,dims=c(1,2),name_ind=0, qtsup=NULL){
 
 
 
-#' Davies-Boulin Indice
-#'
-#' @param object your Multivariate object
-#' @param
-#'
-#' @return Indice de Davies-Bouldin
-#'
-#' @import FactoMineR
-#' @export
-#'
-#' @examples m_DB_index(multivariate_object(infert,1))
-m_DB_index=function(object, method='encoding', rescale=FALSE){
 
-  # prétraitement le data
-
-  data=object$df
-  g=object$group
-
-  data_bis=data
-
-  if (m_data_type(data)=='quantitative-qualitative'){
-    data_bis=m_dummy_data(data,rescale)
-  }
-
-  if (m_data_type(data)=='qualitatives'){
-    if (method=='encoding'){
-      data_bis=m_dummy_data(data,rescale)
-    } else{
-      p=ncol(data)
-      M=sum(sapply(data, FUN = function(x){return(length(unique(x)))}))
-      n_acm=M-p
-      ACM=MCA(data, ncp = n_acm, graph = FALSE)
-      data_bis=ACM$ind$coord
-    }
-
-  }
-
-
-
-
-
-  G=apply(data_bis, MARGIN = 2, FUN = mean)
-  n_g=tapply(data_bis[,1],g,FUN = length)
-  n_G=length(unique(g))
-  columns=ncol(data_bis)
-  row=nrow(data_bis)
-  barycentre=c()
-  for (i in 1:columns){
-    barycentre=rbind(barycentre,tapply(data_bis[,i], g, FUN = mean))
-  }
-
-
-  nom_cluster=colnames(barycentre)
-  # calcul distance intra-classe
-  intra_DB=c()
-
-  for (nom in nom_cluster){
-    df_dataframe=data_bis[g==nom,]
-    len_df_dataframe=nrow(df_dataframe)
-    S=1/len_df_dataframe* sum(apply(df_dataframe,MARGIN = 1,FUN = function(x){return(sum((x-as.numeric(barycentre[,nom]))^2))}))
-
-    intra_DB=c(intra_DB,S)
-  }
-  intra_distance_DB=data.frame(intra_DB)
-  colnames(intra_distance_DB)="Indice de Davies Bouldin"
-  rownames(intra_distance_DB)=nom_cluster
-
-  # calcul distance entre des barycentres
-  dist=pdist(t(barycentre))
-
-
-  # calcul de l'indice DB
-  DB=c()
-
-  for (i in 1:n_G){
-    s=(intra_distance_DB[-i,]+intra_distance_DB[i,])/dist[i,-i]
-    DB=c(DB,max(s))
-  }
-
-  indice_DB_final=data.frame(DB)
-  colnames(indice_DB_final)='Indice de Davies Bouldin'
-  rownames(indice_DB_final)=nom_cluster
-  indice_DB_final
-
-
-  return(indice_DB_final)
-}
 
 
 

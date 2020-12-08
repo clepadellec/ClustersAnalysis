@@ -1,3 +1,9 @@
+##############################################################################
+#                                 CONSTRUCTOR                                #-----------------------
+##############################################################################
+
+
+
 #' Constructor for the univariate object
 #'
 #' @param df your dataframe including explanatory variables and the group variable(target)
@@ -45,6 +51,13 @@ Univariate_object <- function(df,ind_group_class){
   return(instance)
 }
 
+##############################################################################
+#              Contingency table and size effect                             #-----------------------
+##############################################################################
+
+###
+#1#---
+###
 
 #' Function to see if some class are over-representend or not
 #'
@@ -82,6 +95,125 @@ u_desc_size_effect <- function(object,ind_var_exp){
   }
   return(vtest)
 }
+
+
+
+###
+#2#---
+###
+
+
+#' See raws and columns profils, and a barplot
+#'
+#' @param object your Univariate object
+#' @param ind_var_exp the indice of the explanatory variable (only qualitative)
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
+#' @return contingency table between group and explanatory variables and the rows and columns profils
+#' @import questionr
+#' @export
+#'
+#' @examples u_desc_profils((Univariate_object(esoph,1)),3)
+u_desc_profils <- function(object,ind_var_exp,interact=TRUE){
+  if (is.character(object$df[[ind_var_exp]])==FALSE & is.factor(object$df[[ind_var_exp]])==FALSE){
+    return("Votre variable explicative n'est pas qualitative ! ")
+    stop()
+  }
+  #mise en place du tableau de contingence
+  contingence <- table(object$df[[object$group]],object$df[[ind_var_exp]])
+  tab <- as.data.frame(contingence)
+  colnames(tab)<- c("cluster","explanatory","Freq")
+  #on affiche les resultats
+  print("Tableau de contingence : ")
+  print(contingence)
+  print("Profils lignes : ")
+  print(lprop(contingence, digits=1))
+  print("Profils colonnes : ")
+  print(cprop(contingence, digits=2))
+  #on effectue un barplot pour visualiser la distribution des classes/Modalités
+  p <-ggplot(tab, aes(fill = explanatory, y = Freq, x = cluster)) + geom_bar(position ="stack", stat = "identity")
+  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
+
+}
+
+
+###
+#3#---
+###
+
+#' Create mosaic plot
+#'
+#' @param explanatory your explanatory variable
+#' @param cluster
+#'
+#' @return
+#' @export
+#'
+#' @examples
+u_Mosaic_plot <- function(explanatory, cluster){
+
+  #calcul des longueurs de vecteur
+  levVar1 <- length(levels(explanatory))
+  levVar2 <- length(levels(cluster))
+
+  #creation contingence mais en proportion
+  jointTable <- prop.table(table(explanatory, cluster))
+  #transformation en df
+  data <- as.data.frame(jointTable)
+  #calcul des valeurs à afficher
+  data$marginVar1 <- prop.table(table(explanatory))
+  data$Clusters <- data$Freq / data$marginVar1
+  data$Explanatory <- c(0, cumsum(data$marginVar1)[1:levVar1 -1]) +
+    data$marginVar1 / 2
+
+  #creation d'un mosaic plot à l'aide de barplot
+  g<- ggplot(data, aes(Explanatory, Clusters)) +
+    geom_bar(stat = "identity", aes(width = marginVar1, fill = cluster), col = "Grey") +
+    geom_text(aes(label = as.character(explanatory), x = Explanatory, y = 1.1))
+
+
+  return(g)
+}
+
+###
+#4#---
+###
+
+#' Plot the size effect with a mosaic plot
+#'
+#' @param object your univariate object
+#' @param ind_var_exp the indice of your explanatory variable(only qualitative)
+#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
+#' @return a mosaic plot which is the distribution of your explanatory variable by class
+#'
+#'
+#' @rawNamespace import(plotly, except = last_plot)
+#'
+#' @import ggplot2
+#' @export
+#'
+#' @examples u_plot_size_effect((Univariate_object(esoph,1)),2)
+u_plot_size_effect<- function(object,name_var_exp, interact=TRUE){
+  #on recup les données sur la var de groupe et la var explicative
+  var_groupe <- object$name_group
+  x=object$df[[name_var_exp]]
+  y=object$df[[var_groupe]]
+
+  #on créer le df correspondant
+  df=data.frame("explanatory"=x, "cluster"=y)
+  #on créer un objet ggplot qui correspond au mosaic plot
+  p <- u_Mosaic_plot(df$explanatory,df$cluster)
+
+  #si l'utilisiteur veut un graph interactif alors on utilise ggplotly sinon on retourne juste l'objet ggplot
+  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
+
+}
+
+
+##############################################################################
+#                             Chisq test                                     #-----------------------
+##############################################################################
+
+
 
 #' Function to apply chisq test between your group variable and all your qualitatives variables
 #'
@@ -125,6 +257,11 @@ u_chisq_test_all <- function(object){
   return(res)
 }
 
+##############################################################################
+#                             Components analysis                            #-----------------------
+##############################################################################
+
+
 #' Vizualise modality and class on the same plan
 #'
 #' @param object your Univariate object
@@ -149,104 +286,14 @@ u_afc_plot <- function(object,ind_var_exp){
 
 }
 
-#' See raws and columns profils, and a barplot
-#'
-#' @param object your Univariate object
-#' @param ind_var_exp the indice of the explanatory variable (only qualitative)
-#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
-#' @return contingency table between group and explanatory variables and the rows and columns profils
-#' @import questionr
-#' @export
-#'
-#' @examples u_desc_profils((Univariate_object(esoph,1)),3)
-u_desc_profils <- function(object,ind_var_exp,interact=TRUE){
-  if (is.character(object$df[[ind_var_exp]])==FALSE & is.factor(object$df[[ind_var_exp]])==FALSE){
-    return("Votre variable explicative n'est pas qualitative ! ")
-    stop()
-  }
-  #mise en place du tableau de contingence
-  contingence <- table(object$df[[object$group]],object$df[[ind_var_exp]])
-  tab <- as.data.frame(contingence)
-  colnames(tab)<- c("cluster","explanatory","Freq")
-  #on affiche les resultats
-  print("Tableau de contingence : ")
-  print(contingence)
-  print("Profils lignes : ")
-  print(lprop(contingence, digits=1))
-  print("Profils colonnes : ")
-  print(cprop(contingence, digits=2))
-  #on effectue un barplot pour visualiser la distribution des classes/Modalités
-  p <-ggplot(tab, aes(fill = explanatory, y = Freq, x = cluster)) + geom_bar(position ="stack", stat = "identity")
-  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
-
-}
+##############################################################################
+#             Means comparisons (using student test)                         #-----------------------
+##############################################################################
 
 
-
-
-#' Create mosaic plot
-#'
-#' @param explanatory your explanatory variable
-#' @param cluster
-#'
-#' @return
-#' @export
-#'
-#' @examples
-u_Mosaic_plot <- function(explanatory, cluster){
-
-  #calcul des longueurs de vecteur
-  levVar1 <- length(levels(explanatory))
-  levVar2 <- length(levels(cluster))
-
-  #creation contingence mais en proportion
-  jointTable <- prop.table(table(explanatory, cluster))
-  #transformation en df
-  data <- as.data.frame(jointTable)
-  #calcul des valeurs à afficher
-  data$marginVar1 <- prop.table(table(explanatory))
-  data$Clusters <- data$Freq / data$marginVar1
-  data$Explanatory <- c(0, cumsum(data$marginVar1)[1:levVar1 -1]) +
-    data$marginVar1 / 2
-
-  #creation d'un mosaic plot à l'aide de barplot
-  g<- ggplot(data, aes(Explanatory, Clusters)) +
-    geom_bar(stat = "identity", aes(width = marginVar1, fill = cluster), col = "Grey") +
-    geom_text(aes(label = as.character(explanatory), x = Explanatory, y = 1.1))
-
-
-  return(g)
-}
-
-#' Plot the size effect with a mosaic plot
-#'
-#' @param object your univariate object
-#' @param ind_var_exp the indice of your explanatory variable(only qualitative)
-#' @param interact if TRUE then an interactive vizualisation is generate with ggplotly, else there is just a classic plot
-#' @return a mosaic plot which is the distribution of your explanatory variable by class
-#'
-#'
-#' @rawNamespace import(plotly, except = last_plot)
-#'
-#' @import ggplot2
-#' @export
-#'
-#' @examples u_plot_size_effect((Univariate_object(esoph,1)),2)
-u_plot_size_effect<- function(object,name_var_exp, interact=TRUE){
-  #on recup les données sur la var de groupe et la var explicative
-  var_groupe <- object$name_group
-  x=object$df[[name_var_exp]]
-  y=object$df[[var_groupe]]
-
-  #on créer le df correspondant
-  df=data.frame("explanatory"=x, "cluster"=y)
-  #on créer un objet ggplot qui correspond au mosaic plot
-  p <- u_Mosaic_plot(df$explanatory,df$cluster)
-
-  #si l'utilisiteur veut un graph interactif alors on utilise ggplotly sinon on retourne juste l'objet ggplot
-  if (interact==TRUE){return(ggplotly(p))}else{return(p)}
-
-}
+###
+#1#---
+###
 
 #' Shapiro test
 #'
@@ -270,6 +317,11 @@ u_shapiro_test <- function(pop_a,pop_b){
   if(bool_a==TRUE & bool_b==TRUE){hyp_gauss=TRUE}else{hyp_gauss=FALSE}
   return(hyp_gauss)
 }
+
+
+###
+#2#---
+###
 
 #' Mean's comparison using student test
 #'
@@ -332,6 +384,11 @@ u_ttest_all <- function(object){
   return(res)
 }
 
+##############################################################################
+#                             Test Value                                     #-----------------------
+##############################################################################
+
+
 
 #' Calculate the test value
 #'
@@ -384,7 +441,13 @@ u_test_value=function(object,i=1){
 
 }
 
+##############################################################################
+#                             Correlation using Fisher                       #-----------------------
+##############################################################################
 
+###
+#1#---
+###
 
 #' Calculate the correlation
 #'
@@ -409,6 +472,11 @@ u_eta2=function(x,g){
   eta=var_inter/var_total
   return(eta)
 }
+
+
+###
+#2#---
+###
 
 #' Calculate correlation for each quantitatives variable and calculate the p-value using fisher
 #'

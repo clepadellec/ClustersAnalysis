@@ -131,6 +131,9 @@ on the cold tolerance of the grass species Echinochloa crus-galli.
 Import ClustersAnalysis from Github (using devtools)
 ====================================================
 
+Please download the latest R version (&gt;4.0) before running the code
+below.
+
     #Use the below line to install devtools if necessary
     #install.packages("devtools")
     #library(devtools)
