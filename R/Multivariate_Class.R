@@ -538,7 +538,46 @@ m_rand_ajusted=function(g1,g2){
 }
 
 
+#' Compare two partitions, real classes vs kmeans classes (with ajusted indice)
+#'
+#' @param object your Multivariate object
+#'
+#' @return ajusted rand index between the result of kmean and y
+#' @export
+#'
+#' @examples m_kmean_rand_ajusted(multivariate_object(infert,1))
+#'
+m_kmean_rand_ajusted=function(object, rescale=FALSE){
+  X=object$df
+  y=object$group
 
+
+  if (m_data_type(X)=="quantitatives"){
+    X_bis=X
+  }
+
+  if (m_data_type(X)=="quantitative"){
+    X_bis=data.frame(X)
+  }
+
+  if (m_data_type(X)=='quantitative-qualitative'|m_data_type(X)=='qualitatives'){
+    X_bis=m_dummy_data(X,rescale)
+  }
+
+  if (m_data_type(X)=='qualitative'){
+    X_bis=dummy_cols(X, remove_first_dummy  = F)[,-1]
+  }
+
+
+
+  n=length(unique(y))
+  X_cr=scale(X_bis,center = T,scale = T)
+  n_means=kmeans(X_cr,centers = n,nstart = 5)
+
+  rand=m_rand_ajusted(n_means$cluster,y)
+  return(rand)
+
+}
 
 
 
