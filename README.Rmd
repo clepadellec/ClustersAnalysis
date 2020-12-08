@@ -49,7 +49,7 @@ summary(CO2)
 
 # Import ClustersAnalysis from Github (using devtools)
 
-
+Please download the latest R version (>4.0) before running the code below.
 
 ```{r}
 #Use the below line to install devtools if necessary
